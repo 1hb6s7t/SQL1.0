@@ -3,11 +3,12 @@
  */
 import axios from 'axios'
 
-// 创建axios实例
-// 生产环境使用实际API地址，开发环境使用代理
-const API_BASE_URL = import.meta.env.PROD 
-  ? 'https://api.liujun-sql.xyz/api'  // 生产环境API地址
-  : '/api';  // 开发环境使用代理
+// API地址配置
+// 本地开发：使用 /api（通过 Vite 代理到 localhost:3000）
+// ngrok部署：修改为 ngrok 提供的后端地址，如 'https://xxx.ngrok-free.app/api'
+const API_BASE_URL = '/api';
+
+console.log('🔗 API地址:', API_BASE_URL);
 
 const api = axios.create({
   baseURL: API_BASE_URL,

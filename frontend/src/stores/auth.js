@@ -48,8 +48,10 @@ export const useAuthStore = defineStore('auth', () => {
   // 登录
   const login = async (credentials) => {
     loading.value = true
+    console.log('📤 发送登录请求:', credentials)
     try {
       const response = await api.post('/auth/login', credentials)
+      console.log('📥 登录响应:', response.data)
       if (response.data.success) {
         user.value = response.data.data.user
         setToken(response.data.data.token)
@@ -57,6 +59,8 @@ export const useAuthStore = defineStore('auth', () => {
       }
       return { success: false, message: response.data.message }
     } catch (error) {
+      console.error('❌ 登录错误:', error)
+      console.error('❌ 错误响应:', error.response?.data)
       const message = error.response?.data?.message || '登录失败，请检查账号密码'
       return { success: false, message }
     } finally {

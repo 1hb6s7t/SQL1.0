@@ -26,12 +26,12 @@ const registerValidation = [
     .withMessage('密码长度至少为6个字符')
 ];
 
-// 登录验证规则
+// 登录验证规则（支持用户名或邮箱）
 const loginValidation = [
   body('email')
     .trim()
-    .isEmail()
-    .withMessage('请输入有效的邮箱地址'),
+    .notEmpty()
+    .withMessage('请输入用户名或邮箱'),
   body('password')
     .notEmpty()
     .withMessage('请输入密码')

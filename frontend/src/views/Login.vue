@@ -8,11 +8,11 @@
 
       <form @submit.prevent="handleLogin" class="auth-form">
         <div class="form-group">
-          <label class="form-label">邮箱</label>
+          <label class="form-label">用户名或邮箱</label>
           <input 
             v-model="form.email" 
-            type="email" 
-            placeholder="请输入邮箱"
+            type="text" 
+            placeholder="请输入用户名或邮箱"
             required
           />
         </div>

@@ -77,6 +77,7 @@ exports.register = async (req, res) => {
 
 /**
  * 用户登录
+ * 支持邮箱或用户名登录
  */
 exports.login = async (req, res) => {
   try {
@@ -91,12 +92,17 @@ exports.login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // 查找用户
-    const user = await User.findByEmail(email);
+    // 查找用户 - 支持邮箱或用户名登录
+    let user = await User.findByEmail(email);
+    if (!user) {
+      // 如果邮箱找不到，尝试用用户名查找
+      user = await User.findByUsername(email);
+    }
+    
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: '邮箱或密码错误'
+        message: '账号或密码错误'
       });
     }
 
