@@ -7,6 +7,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 const config = require('./config/env');
 
 // 导入路由
@@ -23,12 +24,12 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-// CORS配置
+// CORS配置 - 允许所有来源（公网访问需要）
 app.use(cors({
-  origin: [config.frontendUrl, 'http://localhost:5173', 'http://localhost:3000'],
+  origin: true,  // 允许所有来源
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning']
 }));
 
 // 请求体解析
@@ -126,7 +127,29 @@ app.get('/api', (req, res) => {
   });
 });
 
-// 404处理
+// 静态文件服务（用于公网部署，服务前端构建文件）
+const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendDistPath));
+
+// 所有非 API 请求返回前端入口（支持前端路由）
+app.get('*', (req, res, next) => {
+  // 如果是 API 请求，跳过
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  // 返回前端入口文件
+  res.sendFile(path.join(frontendDistPath, 'index.html'), (err) => {
+    if (err) {
+      // 如果前端未构建，返回提示
+      res.status(404).json({
+        success: false,
+        message: '前端页面未构建，请先运行: cd frontend && npm run build'
+      });
+    }
+  });
+});
+
+// 404处理（仅针对 API）
 app.use((req, res) => {
   res.status(404).json({
     success: false,

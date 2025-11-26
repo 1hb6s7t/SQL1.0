@@ -1,18 +1,30 @@
 <template>
   <div id="app" class="app-container">
+    <!-- 动态背景 -->
+    <DynamicBackground />
+
     <!-- 导航栏 -->
     <nav class="navbar">
       <div class="nav-container">
         <router-link to="/" class="nav-brand">
-          <span class="brand-icon">📊</span>
+          <img src="/tb.png" alt="哈尔滨剑桥学院" class="brand-logo" />
+          <span class="brand-divider"></span>
           <span class="brand-text">SQL学习平台</span>
         </router-link>
         
         <div class="nav-links">
-          <router-link to="/" class="nav-link">首页</router-link>
-          <router-link to="/knowledge" class="nav-link">知识库</router-link>
-          <router-link to="/playground" class="nav-link">练习场</router-link>
-          <router-link to="/community" class="nav-link">社区</router-link>
+          <router-link to="/" class="nav-link">
+            <span class="icon">🏠</span> 首页
+          </router-link>
+          <router-link to="/knowledge" class="nav-link">
+            <span class="icon">📚</span> 知识库
+          </router-link>
+          <router-link to="/playground" class="nav-link">
+            <span class="icon">💻</span> 练习场
+          </router-link>
+          <router-link to="/community" class="nav-link">
+            <span class="icon">💬</span> 社区
+          </router-link>
         </div>
         
         <div class="nav-auth">
@@ -33,19 +45,26 @@
 
     <!-- 主内容区 -->
     <main class="main-content">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </main>
 
     <!-- 页脚 -->
     <footer class="footer">
       <div class="footer-container">
-        <p>© 2024 SQL学习平台 - 让SQL学习更简单</p>
+        <div class="footer-logo">
+          <img src="/tb.png" alt="Logo" style="height: 40px; opacity: 0.8;">
+        </div>
+        <p>© 2024 哈尔滨剑桥学院 SQL学习平台</p>
         <p class="footer-links">
-          <a href="#">关于我们</a>
+          <router-link to="/about">关于我们</router-link>
           <span class="divider">|</span>
-          <a href="#">使用帮助</a>
+          <a href="#">教学资源</a>
           <span class="divider">|</span>
-          <a href="#">API文档</a>
+          <a href="#">反馈建议</a>
         </p>
       </div>
     </footer>
@@ -63,6 +82,7 @@
 import { ref, provide } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import DynamicBackground from '@/components/DynamicBackground.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -99,18 +119,20 @@ authStore.checkAuth()
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
 }
 
-/* 导航栏 */
+/* 导航栏 - 玻璃拟态升级版 */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
+  /* 混合深红背景，保持透亮感 */
+  background: rgba(60, 10, 10, 0.7);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
   padding: 0 1.5rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 .nav-container {
@@ -119,53 +141,86 @@ authStore.checkAuth()
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 80px; /* 增加高度以容纳更大的校标 */
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1.25rem;
+  transition: opacity 0.3s;
 }
 
-.brand-icon {
-  font-size: 1.5rem;
+.nav-brand:hover {
+  opacity: 0.9;
+}
+
+.brand-logo {
+  height: 64px; /* 放大校标，更显眼 */
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease;
+}
+
+.brand-logo:hover {
+  transform: scale(1.05);
+}
+
+.brand-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .brand-text {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
+/* 导航链接 - 胶囊式设计 */
 .nav-links {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.4rem;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .nav-link {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.2rem;
   text-decoration: none;
-  color: var(--text-secondary);
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 99px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-link .icon {
+  font-size: 1.1em;
 }
 
 .nav-link:hover {
-  color: var(--text-primary);
-  background: var(--bg-secondary);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-link.router-link-active {
-  color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.15);
+  color: #8B0000;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
 }
 
+/* 用户区域 */
 .nav-auth {
   display: flex;
   align-items: center;
@@ -175,68 +230,69 @@ authStore.checkAuth()
 .nav-user {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   text-decoration: none;
-  color: var(--text-primary);
-  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  color: #fff;
+  padding: 0.3rem 1rem 0.3rem 0.3rem;
   border-radius: 999px;
-  background: var(--bg-secondary);
-  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-user:hover {
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #8B0000;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.user-name {
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .btn-login, .btn-logout {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.2rem;
   border-radius: 8px;
   text-decoration: none;
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: 600;
   transition: all 0.2s ease;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.9);
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
 }
 
 .btn-login:hover, .btn-logout:hover {
-  color: var(--text-primary);
-  background: var(--bg-secondary);
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
 }
 
 .btn-register {
-  padding: 0.5rem 1.25rem;
-  border-radius: 8px;
+  padding: 0.5rem 1.8rem;
+  border-radius: 50px;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.875rem;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  color: white;
-  transition: all 0.2s ease;
+  font-weight: 700;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #8B0000;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+  text-transform: uppercase;
+  font-size: 0.9rem;
 }
 
 .btn-register:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 165, 0, 0.5);
+  filter: brightness(1.1);
 }
 
 /* 主内容 */
@@ -246,87 +302,114 @@ authStore.checkAuth()
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* 页面过渡 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 /* 页脚 */
 .footer {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(40,10,10,0.6));
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 215, 0, 0.1);
+  padding: 3rem 2rem;
   margin-top: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-container {
   max-width: 1400px;
   margin: 0 auto;
   text-align: center;
-  color: var(--text-muted);
-  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-logo {
+  margin-bottom: 0.5rem;
+}
+
+.footer p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
 }
 
 .footer-links {
-  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .footer-links a {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
-  color: var(--accent-primary);
-}
-
-.footer-links .divider {
-  margin: 0 0.5rem;
-  opacity: 0.5;
+  color: #FFD700;
 }
 
 /* Toast消息 */
 .toast {
   position: fixed;
-  top: 80px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  font-weight: 500;
-  font-size: 0.875rem;
+  padding: 0.8rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
   z-index: 1000;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  animation: toast-slide-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 .toast.info {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  background: rgba(30, 30, 30, 0.95);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .toast.success {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
 }
 
 .toast.error {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
 }
 
-.toast-enter-active,
-.toast-leave-active {
-  transition: all 0.3s ease;
-}
-
-.toast-enter-from,
-.toast-leave-to {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-20px);
-}
-
-/* 响应式 */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
@@ -337,4 +420,3 @@ authStore.checkAuth()
   }
 }
 </style>
-

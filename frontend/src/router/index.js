@@ -13,6 +13,7 @@ const Knowledge = () => import('@/views/Knowledge.vue')
 const KnowledgeDetail = () => import('@/views/KnowledgeDetail.vue')
 const Playground = () => import('@/views/Playground.vue')
 const Community = () => import('@/views/Community.vue')
+const AboutUs = () => import('@/views/AboutUs.vue')
 
 const routes = [
   {
@@ -62,6 +63,12 @@ const routes = [
     name: 'Community',
     component: Community,
     meta: { title: '社区' }
+  },
+  {
+    path: '/about',
+    name: 'AboutUs',
+    component: AboutUs,
+    meta: { title: '关于我们' }
   }
 ]
 

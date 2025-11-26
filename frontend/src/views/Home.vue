@@ -4,12 +4,12 @@
     <section class="hero">
       <div class="hero-content">
         <h1 class="hero-title">
-          <span class="gradient-text">掌握SQL</span>
-          <br>从这里开始
+          <span class="gradient-text">哈尔滨剑桥学院</span>
+          <br>SQL学习平台
         </h1>
         <p class="hero-subtitle">
-          交互式学习平台，AI智能辅导，社区互动答疑
-          <br>让数据库查询语言学习变得简单有趣
+          厚德 笃学 求实 创新
+          <br>在这里开启你的数据库探索之旅
         </p>
         <div class="hero-actions">
           <router-link to="/playground" class="btn btn-primary btn-lg">
@@ -27,20 +27,23 @@
             <span class="dot red"></span>
             <span class="dot yellow"></span>
             <span class="dot green"></span>
-            <span class="code-title">query.sql</span>
+            <span class="code-title">welcome.sql</span>
           </div>
-          <pre class="code-content"><code><span class="keyword">SELECT</span> name, email, created_at
-<span class="keyword">FROM</span> users
-<span class="keyword">WHERE</span> status = <span class="string">'active'</span>
-<span class="keyword">ORDER BY</span> created_at <span class="keyword">DESC</span>
-<span class="keyword">LIMIT</span> <span class="number">10</span>;</code></pre>
+          <pre class="code-content"><code><span class="keyword">SELECT</span> future, success
+<span class="keyword">FROM</span> efforts
+<span class="keyword">WHERE</span> passion = <span class="string">'True'</span>
+<span class="keyword">AND</span> persistence = <span class="string">'True'</span>
+<span class="keyword">ORDER BY</span> created_at <span class="keyword">DESC</span>;</code></pre>
         </div>
       </div>
     </section>
 
     <!-- 功能特色 -->
     <section class="features">
-      <h2 class="section-title">平台特色</h2>
+      <div class="section-header-wrapper">
+        <h2 class="section-title">平台特色</h2>
+        <div class="section-line"></div>
+      </div>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">🎯</div>
@@ -67,7 +70,10 @@
 
     <!-- 热门知识点 -->
     <section class="popular-section" v-if="popularKnowledge.length">
-      <h2 class="section-title">热门知识点</h2>
+      <div class="section-header-wrapper">
+        <h2 class="section-title">热门知识点</h2>
+        <div class="section-line"></div>
+      </div>
       <div class="knowledge-grid">
         <div 
           v-for="item in popularKnowledge" 
@@ -90,7 +96,10 @@
 
     <!-- 最新评论 -->
     <section class="recent-section" v-if="recentComments.length">
-      <h2 class="section-title">社区动态</h2>
+      <div class="section-header-wrapper">
+        <h2 class="section-title">社区动态</h2>
+        <div class="section-line"></div>
+      </div>
       <div class="comments-list">
         <div v-for="comment in recentComments" :key="comment.id" class="comment-item">
           <div class="comment-avatar">
@@ -113,7 +122,7 @@
     <!-- CTA -->
     <section class="cta">
       <h2>准备好开始学习SQL了吗？</h2>
-      <p>免费注册，立即开启你的数据库学习之旅</p>
+      <p>立即注册，开启你的数据库学习之旅</p>
       <router-link v-if="!authStore.isLoggedIn" to="/register" class="btn btn-primary btn-lg">
         立即注册
       </router-link>
@@ -181,8 +190,8 @@ onMounted(async () => {
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
-  padding: 3rem 0;
-  min-height: 60vh;
+  padding: 4rem 0;
+  min-height: 70vh;
 }
 
 .hero-title {
@@ -190,20 +199,25 @@ onMounted(async () => {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 1.5rem;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+  background: linear-gradient(135deg, #FFD700, #F0E68C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .hero-subtitle {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.8;
   margin-bottom: 2rem;
+  border-left: 4px solid var(--accent-primary);
+  padding-left: 1rem;
 }
 
 .hero-actions {
@@ -212,24 +226,31 @@ onMounted(async () => {
 }
 
 .btn-lg {
-  padding: 0.875rem 2rem;
-  font-size: 1rem;
+  padding: 0.875rem 2.5rem;
+  font-size: 1.1rem;
 }
 
 /* 代码预览 */
 .hero-visual {
   display: flex;
   justify-content: center;
+  perspective: 1000px;
 }
 
 .code-preview {
   width: 100%;
   max-width: 480px;
-  background: var(--bg-code);
+  background: rgba(26, 5, 5, 0.9);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.2);
+  transform: rotateY(-10deg) rotateX(5deg);
+  transition: transform 0.5s ease;
+}
+
+.code-preview:hover {
+  transform: rotateY(0) rotateX(0) scale(1.02);
 }
 
 .code-header {
@@ -237,7 +258,7 @@ onMounted(async () => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: var(--bg-secondary);
+  background: rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -261,24 +282,49 @@ onMounted(async () => {
 .code-content {
   padding: 1.5rem;
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.8;
+  font-family: var(--font-mono);
 }
 
-.code-content .keyword { color: #c678dd; }
-.code-content .string { color: #98c379; }
-.code-content .number { color: #d19a66; }
+.code-content .keyword { color: #FFD700; font-weight: bold; }
+.code-content .string { color: #98FB98; }
+.code-content .number { color: #FF7F50; }
 
-/* 功能特色 */
-.features {
-  padding: 4rem 0;
+/* 通用区块标题 */
+.section-header-wrapper {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
 }
 
 .section-title {
   font-size: 2rem;
   font-weight: 700;
-  text-align: center;
-  margin-bottom: 3rem;
+  color: var(--accent-primary);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  display: inline-block;
+  padding: 0 1rem;
+  background: transparent; /* 遮挡线条 - 这里背景是透明的，所以不能用颜色遮挡 */
+  position: relative;
+  z-index: 2;
+}
+
+/* 修改：由于背景是动态的，不能用纯色遮挡线条，改为两段线条 */
+.section-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-primary) 30%, transparent 50%, var(--accent-primary) 70%, transparent 100%);
+  z-index: 1;
+}
+
+/* 功能特色 */
+.features {
+  padding: 4rem 0;
 }
 
 .features-grid {
@@ -288,28 +334,32 @@ onMounted(async () => {
 }
 
 .feature-card {
-  background: var(--bg-secondary);
+  background: rgba(100, 0, 0, 0.4);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 2rem 1.5rem;
   text-align: center;
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-10px);
   border-color: var(--accent-primary);
-  box-shadow: var(--shadow-glow);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
+  background: rgba(120, 0, 0, 0.6);
 }
 
 .feature-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
 
 .feature-card h3 {
   font-size: 1.125rem;
   margin-bottom: 0.75rem;
+  color: var(--text-primary);
 }
 
 .feature-card p {
@@ -330,17 +380,38 @@ onMounted(async () => {
 }
 
 .knowledge-card {
-  background: var(--bg-secondary);
+  background: rgba(100, 0, 0, 0.4);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.knowledge-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent-primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
 }
 
 .knowledge-card:hover {
   border-color: var(--accent-primary);
-  transform: translateY(-2px);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.knowledge-card:hover::after {
+  transform: scaleX(1);
 }
 
 .knowledge-badge {
@@ -350,26 +421,31 @@ onMounted(async () => {
   font-weight: 500;
   border-radius: 999px;
   margin-bottom: 1rem;
+  border: 1px solid transparent;
 }
 
 .knowledge-badge.beginner {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--success);
+  background: rgba(50, 205, 50, 0.15);
+  color: #32CD32;
+  border-color: rgba(50, 205, 50, 0.3);
 }
 
 .knowledge-badge.intermediate {
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--warning);
+  background: rgba(255, 215, 0, 0.15);
+  color: #FFD700;
+  border-color: rgba(255, 215, 0, 0.3);
 }
 
 .knowledge-badge.advanced {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--error);
+  background: rgba(255, 99, 71, 0.15);
+  color: #FF6347;
+  border-color: rgba(255, 99, 71, 0.3);
 }
 
 .knowledge-card h3 {
   font-size: 1rem;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .knowledge-card p {
@@ -401,21 +477,30 @@ onMounted(async () => {
   display: flex;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  background: var(--bg-secondary);
+  background: rgba(100, 0, 0, 0.4);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.comment-item:hover {
+  background: rgba(120, 0, 0, 0.6);
+  border-color: var(--accent-primary);
 }
 
 .comment-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #8B0000;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .comment-body {
@@ -433,6 +518,7 @@ onMounted(async () => {
 .comment-header .username {
   font-weight: 600;
   font-size: 0.875rem;
+  color: var(--accent-primary);
 }
 
 .comment-header .time {
@@ -442,7 +528,7 @@ onMounted(async () => {
 
 .comment-content {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -450,19 +536,38 @@ onMounted(async () => {
 .cta {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .cta h2 {
   font-size: 2rem;
   margin-bottom: 0.75rem;
+  color: var(--accent-primary);
+  position: relative;
+  z-index: 1;
 }
 
 .cta p {
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 /* 响应式 */
@@ -476,12 +581,29 @@ onMounted(async () => {
     font-size: 2.5rem;
   }
   
+  .hero-subtitle {
+    border-left: none;
+    border-bottom: 4px solid var(--accent-primary);
+    padding-bottom: 1rem;
+    padding-left: 0;
+    display: inline-block;
+  }
+  
   .hero-actions {
     justify-content: center;
   }
   
   .hero-visual {
     order: -1;
+    transform: none;
+  }
+  
+  .code-preview {
+    transform: none;
+  }
+  
+  .code-preview:hover {
+    transform: scale(1.02);
   }
   
   .features-grid,
@@ -505,4 +627,3 @@ onMounted(async () => {
   }
 }
 </style>
-

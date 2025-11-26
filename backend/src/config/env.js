@@ -16,9 +16,9 @@ const config = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   
   // Qwen AI配置
-  qwenApiKey: process.env.QWEN_API_KEY || 'sk-79bf85aad3e94afb9ea071c617d32c3b',
+  qwenApiKey: process.env.QWEN_API_KEY || 'sk-f7595fe3394f4b81a72f15c929c91e4f',
   qwenApiUrl: process.env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
-  qwenModel: process.env.QWEN_MODEL || 'qwen-plus',
+  qwenModel: process.env.QWEN_MODEL || 'qwen3-coder-plus',
   
   // CORS配置
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',

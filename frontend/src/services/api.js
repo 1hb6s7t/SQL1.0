@@ -4,8 +4,13 @@
 import axios from 'axios'
 
 // 创建axios实例
+// 生产环境使用实际API地址，开发环境使用代理
+const API_BASE_URL = import.meta.env.PROD 
+  ? 'https://api.liujun-sql.xyz/api'  // 生产环境API地址
+  : '/api';  // 开发环境使用代理
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
