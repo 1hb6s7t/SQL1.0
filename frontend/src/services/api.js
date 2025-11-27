@@ -4,9 +4,20 @@
 import axios from 'axios'
 
 // API地址配置
-// 本地开发：使用 /api（通过 Vite 代理到 localhost:3000）
-// ngrok部署：修改为 ngrok 提供的后端地址，如 'https://xxx.ngrok-free.app/api'
-const API_BASE_URL = '/api';
+// 根据访问地址自动判断使用哪个后端
+const getApiBaseUrl = () => {
+  const hostname = window.location.hostname;
+  
+  // 本地开发环境
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return '/api';  // 使用 Vite 代理
+  }
+  
+  // Netlify 或其他线上环境 - 使用 Render 后端
+  return 'https://sql-learning-backend.onrender.com/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 console.log('🔗 API地址:', API_BASE_URL);
 
