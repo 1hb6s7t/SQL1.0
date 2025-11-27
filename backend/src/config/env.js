@@ -18,6 +18,11 @@ const config = {
   // Qwen AI配置
   qwenApiKey: process.env.QWEN_API_KEY || 'sk-f7595fe3394f4b81a72f15c929c91e4f',
   qwenApiUrl: process.env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+  // 代码相关任务使用 qwen3-coder-plus
+  qwenCoderModel: process.env.QWEN_CODER_MODEL || 'qwen3-coder-plus',
+  // 通用对话任务使用 qwen3-max
+  qwenMaxModel: process.env.QWEN_MAX_MODEL || 'qwen-max',
+  // 默认模型（兼容旧配置）
   qwenModel: process.env.QWEN_MODEL || 'qwen3-coder-plus',
   
   // CORS配置

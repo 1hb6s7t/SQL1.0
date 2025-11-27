@@ -9,13 +9,38 @@ class AIService {
   constructor() {
     this.apiKey = config.qwenApiKey;
     this.apiUrl = config.qwenApiUrl;
-    this.model = config.qwenModel;
+    // 代码相关任务使用 qwen3-coder-plus
+    this.coderModel = config.qwenCoderModel;
+    // 通用对话任务使用 qwen-max
+    this.maxModel = config.qwenMaxModel;
+    // 默认模型
+    this.defaultModel = config.qwenModel;
+    
+    console.log('🤖 AI模型配置:');
+    console.log(`   代码模型: ${this.coderModel}`);
+    console.log(`   对话模型: ${this.maxModel}`);
   }
 
   /**
    * 调用Qwen API
+   * @param {Array} messages - 消息数组
+   * @param {number} maxTokens - 最大token数
+   * @param {string} modelType - 模型类型: 'coder' | 'max' | 'default'
    */
-  async callQwenAPI(messages, maxTokens = 2000) {
+  async callQwenAPI(messages, maxTokens = 2000, modelType = 'default') {
+    // 根据任务类型选择模型
+    let model;
+    switch (modelType) {
+      case 'coder':
+        model = this.coderModel;
+        break;
+      case 'max':
+        model = this.maxModel;
+        break;
+      default:
+        model = this.defaultModel;
+    }
+
     try {
       const response = await fetch(this.apiUrl, {
         method: 'POST',
@@ -24,7 +49,7 @@ class AIService {
           'Authorization': `Bearer ${this.apiKey}`
         },
         body: JSON.stringify({
-          model: this.model,
+          model: model,
           messages: messages,
           max_tokens: maxTokens,
           temperature: 0.7
@@ -37,6 +62,7 @@ class AIService {
       }
 
       const data = await response.json();
+      console.log(`📝 使用模型: ${model}`);
       return data.choices[0].message.content;
     } catch (error) {
       console.error('AI API调用失败:', error.message);
@@ -64,7 +90,7 @@ class AIService {
       }
     ];
 
-    return this.callQwenAPI(messages);
+    return this.callQwenAPI(messages, 2000, 'coder');  // 使用代码模型
   }
 
   /**
@@ -89,7 +115,7 @@ class AIService {
       }
     ];
 
-    return this.callQwenAPI(messages);
+    return this.callQwenAPI(messages, 2000, 'coder');  // 使用代码模型
   }
 
   /**
@@ -122,7 +148,7 @@ class AIService {
       });
     }
 
-    return this.callQwenAPI(messages, 1000);
+    return this.callQwenAPI(messages, 1000, 'max');  // 使用对话模型
   }
 
   /**
@@ -158,7 +184,7 @@ class AIService {
       }
     ];
 
-    return this.callQwenAPI(messages, 2500);
+    return this.callQwenAPI(messages, 2500, 'max');  // 使用对话模型
   }
 
   /**
@@ -185,7 +211,7 @@ class AIService {
       }
     ];
 
-    return this.callQwenAPI(messages);
+    return this.callQwenAPI(messages, 2000, 'max');  // 使用对话模型
   }
 
   /**
@@ -229,7 +255,7 @@ class AIService {
       }
     ];
 
-    return this.callQwenAPI(messages, 2000);
+    return this.callQwenAPI(messages, 2000, 'max');  // 使用对话模型
   }
 
   /**
@@ -261,7 +287,7 @@ class AIService {
       }
     ];
 
-    return this.callQwenAPI(messages);
+    return this.callQwenAPI(messages, 2000, 'coder');  // 使用代码模型
   }
 }
 
