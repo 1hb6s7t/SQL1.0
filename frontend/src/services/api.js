@@ -103,5 +103,17 @@ export const aiAPI = {
   getWeeklySummary: () => api.get('/ai/weekly-summary')
 }
 
+// 例题练习 API
+export const exerciseAPI = {
+  getAll: () => api.get('/exercises'),
+  getById: (id) => api.get(`/exercises/${id}`),
+  getCategories: () => api.get('/exercises/categories'),
+  getSchema: () => api.get('/exercises/schema'),
+  executeSQL: (sql) => api.post('/exercises/execute', { sql }),
+  submitAnswer: (id, sql) => api.post(`/exercises/${id}/submit`, { sql }),
+  getHint: (id, userSQL) => api.post(`/exercises/${id}/hint`, { userSQL }),
+  getUserProgress: () => api.get('/exercises/user/progress')
+}
+
 export default api
 

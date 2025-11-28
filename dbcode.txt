@@ -1,0 +1,53 @@
+CREATE TABLE Student
+       ( Sno       CHAR(10)  PRIMARY  KEY , 
+         Sname    CHAR(20)  UNIQUE , 
+         Ssex      CHAR(2) ,
+         Sage      INT ,
+         Sdept     CHAR(20) ) ;
+CREATE TABLE Course
+       ( Cno     CHAR(4)  PRIMARY KEY ,
+        Cname   CHAR(40)  NOT NULL , 
+        Cpno    CHAR(4) ,
+        Ccredit   SMALLINT(6) ,
+FOREIGN KEY (Cpno) REFERENCES Course (Cno));
+CREATE TABLE SC
+        ( Sno    CHAR(10) ,
+         Cno    CHAR(3) , 
+         Grade   int ,
+PRIMARY KEY (Sno, Cno) ,
+FOREIGN KEY (Sno) REFERENCES Student(Sno) ,
+FOREIGN KEY (Cno) REFERENCES Course(Cno));
+
+Insert into student values('2022101','李勇','男','20','计算机科学与技术');
+Insert into student values('2022102','张三','女','19','计算机科学与技术');
+Insert into student values('2022103','赵正','男','21','计算机科学与技术');
+Insert into student values('2022201','刘晨','女','19','网络工程');
+Insert into student values('2022202','李楠','男','18','网络工程');
+Insert into student values('2022203','杨瑞','男','21','网络工程');
+Insert into student values('2022301','郭宇','男','19','电子信息工程');
+Insert into student values('2022302','王名','女','18','电子信息工程');
+Insert into student values('2022303','李心','女','20','电子信息工程');
+
+Insert into course values('1' , '高等数学'				, null,'5');
+Insert into course values('2' , '离散数学'				, null,'3');
+Insert into course values('3' , 'C语言'					, null,'4');
+Insert into course values('4', '数字逻辑'					, null,'3');
+Insert into course values('5' , '计算机组成原理'			, '4','3');
+Insert into course values('6' , 'JAVA程序设计'			, '3','4');
+Insert into course values('7' , '数据结构'				, '3','4');
+Insert into course values('8' , '数据库原理与应用'		,'7','4');
+Insert into course values('9' , '操作系统'				, '8','4');
+Insert into course values('10' , '计算机网络原理'			, '9','3');
+
+Insert into sc values('2022001','1','92');
+Insert into sc values('2022001','2','85');
+Insert into sc values('2022001','3','88');
+Insert into sc values('2022002','2','90');
+Insert into sc values('2022002','3','80');
+Insert into sc values('2022002','4','58');
+Insert into sc values('2022003','1','56');
+Insert into sc values('2022003','2','87');
+Insert into sc values('2022003','4','82');
+Insert into sc values('2022004','1','69');
+Insert into sc values('2022004','3','93');
+Insert into sc values('2022004','4',null);

@@ -15,6 +15,7 @@ const authRoutes = require('./routes/authRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const knowledgeRoutes = require('./routes/knowledgeRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const exerciseRoutes = require('./routes/exerciseRoutes');
 
 // 创建Express应用
 const app = express();
@@ -73,6 +74,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/knowledge', knowledgeRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/exercises', exerciseRoutes);
 
 // 健康检查端点
 app.get('/api/health', (req, res) => {

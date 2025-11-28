@@ -289,6 +289,80 @@ class AIService {
 
     return this.callQwenAPI(messages, 2000, 'coder');  // 使用代码模型
   }
+
+  /**
+   * 分析例题答案错误原因并给出引导
+   */
+  async analyzeExerciseAnswer(exerciseDescription, hint, userSQL, userResult, correctSQL) {
+    const messages = [
+      {
+        role: 'system',
+        content: `你是一位耐心的SQL教师，正在帮助学生练习SQL查询。学生的答案不正确，你需要：
+
+1. **分析错误原因**：指出学生SQL语句中的具体问题
+2. **引导思考**：不要直接给出正确答案，而是通过提问或提示引导学生思考
+3. **给出建议**：提供修改方向，但让学生自己尝试修正
+4. **鼓励学生**：用友好的语气鼓励学生继续尝试
+
+注意：
+- 不要直接展示正确的SQL语句
+- 用循序渐进的方式引导
+- 语气要友好、鼓励
+- 回复要简洁，重点突出`
+      },
+      {
+        role: 'user',
+        content: `**题目要求**：${exerciseDescription}
+
+**题目提示**：${hint}
+
+**学生的SQL语句**：
+\`\`\`sql
+${userSQL}
+\`\`\`
+
+**学生的查询结果**：${userResult.success ? JSON.stringify(userResult.rows, null, 2) : `执行错误: ${userResult.error}`}
+
+请分析学生的错误并给出引导性的反馈。`
+      }
+    ];
+
+    return this.callQwenAPI(messages, 1500, 'coder');
+  }
+
+  /**
+   * 为例题生成提示
+   */
+  async generateExerciseHint(exerciseDescription, existingHint, userSQL = null) {
+    let userContext = '';
+    if (userSQL) {
+      userContext = `\n\n学生当前的尝试：\n\`\`\`sql\n${userSQL}\n\`\`\``;
+    }
+
+    const messages = [
+      {
+        role: 'system',
+        content: `你是一位SQL教师，学生在做SQL练习时遇到困难，需要你提供提示。
+
+要求：
+1. 不要直接给出答案
+2. 提供思考方向和关键点
+3. 可以提醒相关的SQL语法
+4. 鼓励学生自己尝试
+5. 回复要简洁明了`
+      },
+      {
+        role: 'user',
+        content: `**题目**：${exerciseDescription}
+
+**现有提示**：${existingHint}${userContext}
+
+请根据题目给学生一些额外的思考提示，帮助他们找到解题方向。`
+      }
+    ];
+
+    return this.callQwenAPI(messages, 800, 'max');
+  }
 }
 
 // 导出单例

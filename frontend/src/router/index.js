@@ -12,6 +12,7 @@ const Profile = () => import('@/views/Profile.vue')
 const Knowledge = () => import('@/views/Knowledge.vue')
 const KnowledgeDetail = () => import('@/views/KnowledgeDetail.vue')
 const Playground = () => import('@/views/Playground.vue')
+const Exercises = () => import('@/views/Exercises.vue')
 const Community = () => import('@/views/Community.vue')
 const AboutUs = () => import('@/views/AboutUs.vue')
 
@@ -57,6 +58,12 @@ const routes = [
     name: 'Playground',
     component: Playground,
     meta: { title: 'SQL练习场' }
+  },
+  {
+    path: '/exercises',
+    name: 'Exercises',
+    component: Exercises,
+    meta: { title: '例题练习' }
   },
   {
     path: '/community',

@@ -19,6 +19,9 @@
           <router-link to="/knowledge" class="nav-link">
             <span class="icon">📚</span> 知识库
           </router-link>
+          <router-link to="/exercises" class="nav-link">
+            <span class="icon">📝</span> 例题
+          </router-link>
           <router-link to="/playground" class="nav-link">
             <span class="icon">💻</span> 练习场
           </router-link>
