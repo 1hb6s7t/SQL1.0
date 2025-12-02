@@ -37,20 +37,38 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// 请求速率限制
+// 请求速率限制 - 通用API（宽松配置）
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15分钟
-  max: 100, // 最多100次请求
+  max: 500, // 最多500次请求（放宽限制）
   message: {
     success: false,
     message: '请求过于频繁，请稍后再试'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  // 跳过认证路由的限制
+  skip: (req) => {
+    return req.path.startsWith('/api/auth/');
   }
+});
+
+// 认证路由单独限制（防止暴力破解，但不影响正常使用）
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15分钟
+  max: 50, // 最多50次登录尝试
+  message: {
+    success: false,
+    message: '登录尝试过于频繁，请15分钟后再试'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
 });
 
 // AI路由特殊限制（更严格）
 const aiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1分钟
-  max: 10, // 最多10次请求
+  max: 20, // 最多20次请求（放宽到20次）
   message: {
     success: false,
     message: 'AI功能请求过于频繁，请稍后再试'
@@ -58,8 +76,9 @@ const aiLimiter = rateLimit({
 });
 
 // 应用速率限制
-app.use('/api/', limiter);
-app.use('/api/ai/', aiLimiter);
+app.use('/api/auth/', authLimiter);  // 认证路由单独限制
+app.use('/api/', limiter);           // 通用API限制
+app.use('/api/ai/', aiLimiter);      // AI路由限制
 
 // 请求日志（开发环境）
 if (config.isDev) {
