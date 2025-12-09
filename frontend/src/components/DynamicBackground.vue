@@ -31,14 +31,14 @@ class Particle {
     this.x = Math.random() * width
     this.y = initial ? Math.random() * height : -10
     // 粒子更小，更密集
-    this.size = Math.random() * 1.5 + 0.2
+    this.size = Math.random() * 2 + 0.5
     // 缓慢飘落
     this.speedX = Math.random() * 0.4 - 0.2
     this.speedY = Math.random() * 0.5 + 0.1
-    this.opacity = Math.random() * 0.6 + 0.1
+    this.opacity = Math.random() * 0.6 + 0.2
     this.life = Math.random() * 200 + 100
-    // 纯金配色
-    this.color = `rgba(255, 215, 0, ${this.opacity})`
+    // 蓝白配色 - 白色带一点蓝
+    this.color = `rgba(220, 240, 255, ${this.opacity})`
   }
 
   update() {
@@ -62,8 +62,8 @@ class Particle {
     
     // 偶尔闪烁
     if (Math.random() > 0.98) {
-      ctx.shadowBlur = 5
-      ctx.shadowColor = '#FFD700'
+      ctx.shadowBlur = 8
+      ctx.shadowColor = '#FFFFFF'
     } else {
       ctx.shadowBlur = 0
     }
@@ -76,7 +76,7 @@ const init = () => {
   resize()
   
   // 增加粒子数量，制造“繁星”感
-  const particleCount = Math.min(width * 0.15, 200)
+  const particleCount = Math.min(width * 0.2, 250)
   particles = []
   for (let i = 0; i < particleCount; i++) {
     particles.push(new Particle())
@@ -123,7 +123,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-color: #8B0000; /* 兜底色 */
+  background-color: #001a33; /* 兜底色 - 深蓝 */
   overflow: hidden;
 }
 
@@ -134,13 +134,13 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/bj.png');
+  background-image: url('/blue-white-bg.png');
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
   background-repeat: no-repeat;
   /* 轻微放大以支持视差效果（这里先做静态） */
   transform: scale(1.05);
-  filter: brightness(0.8) contrast(1.1); /* 稍微压暗，增加对比度 */
+  filter: brightness(0.9) contrast(1.1); /* 稍微压暗，增加对比度 */
 }
 
 canvas {
@@ -152,7 +152,7 @@ canvas {
   pointer-events: none;
 }
 
-/* 氛围遮罩 - 底部金色光晕，顶部深色渐变 */
+/* 氛围遮罩 - 蓝色光晕，顶部深色渐变 */
 .atmosphere-overlay {
   position: absolute;
   top: 0;
@@ -162,9 +162,9 @@ canvas {
   z-index: 2;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(139, 0, 0, 0.2) 40%,
-    rgba(255, 215, 0, 0.15) 100%
+    rgba(0, 20, 40, 0.4) 0%,
+    rgba(0, 50, 100, 0.2) 40%,
+    rgba(255, 255, 255, 0.1) 100%
   );
   pointer-events: none;
 }

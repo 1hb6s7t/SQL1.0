@@ -129,13 +129,13 @@ authStore.checkAuth()
   position: sticky;
   top: 0;
   z-index: 100;
-  /* 混合深红背景，保持透亮感 */
-  background: rgba(60, 10, 10, 0.7);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-  padding: 0 1.5rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  /* 混合深蓝背景，保持透亮感 */
+  background: rgba(10, 35, 66, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(135, 206, 235, 0.3);
+  padding: 0 1rem; /* 减少两侧留白 */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 }
 
 .nav-container {
@@ -144,13 +144,13 @@ authStore.checkAuth()
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px; /* 增加高度以容纳更大的校标 */
+  height: 100px; /* 增加高度以容纳更大的校标 */
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
   text-decoration: none;
   transition: opacity 0.3s;
 }
@@ -160,7 +160,7 @@ authStore.checkAuth()
 }
 
 .brand-logo {
-  height: 64px; /* 放大校标，更显眼 */
+  height: 85px; /* 放大校标，更显眼 */
   width: auto;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
   transition: transform 0.3s ease;
@@ -171,56 +171,56 @@ authStore.checkAuth()
 }
 
 .brand-divider {
-  width: 1px;
-  height: 24px;
-  background: rgba(255, 255, 255, 0.3);
+  width: 2px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .brand-text {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.6rem; /* 字体加大 */
+  font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 /* 导航链接 - 胶囊式设计 */
 .nav-links {
   display: flex;
-  gap: 0.8rem;
+  gap: 1rem;
   background: rgba(0, 0, 0, 0.2);
-  padding: 0.4rem;
+  padding: 0.6rem 0.8rem;
   border-radius: 99px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-link {
-  padding: 0.5rem 1.2rem;
+  padding: 0.6rem 1.4rem;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   border-radius: 99px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 1.1rem; /* 字体加大 */
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .nav-link .icon {
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 
 .nav-link:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .nav-link.router-link-active {
-  color: #8B0000;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #003366;
+  background: linear-gradient(135deg, #E0F7FA, #87CEEB);
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.4);
 }
 
 /* 用户区域 */
@@ -236,7 +236,7 @@ authStore.checkAuth()
   gap: 0.8rem;
   text-decoration: none;
   color: #fff;
-  padding: 0.3rem 1rem 0.3rem 0.3rem;
+  padding: 0.4rem 1.2rem 0.4rem 0.4rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -245,56 +245,57 @@ authStore.checkAuth()
 
 .nav-user:hover {
   background: rgba(255, 255, 255, 0.2);
-  border-color: #FFD700;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+  border-color: #87CEEB;
+  box-shadow: 0 0 10px rgba(135, 206, 235, 0.3);
 }
 
 .user-avatar {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #8B0000;
+  background: linear-gradient(135deg, #E0F7FA, #87CEEB);
+  color: #003366;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
 }
 
 .btn-login, .btn-logout {
-  padding: 0.5rem 1.2rem;
+  padding: 0.6rem 1.4rem;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.2s ease;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
+  font-size: 1.1rem;
 }
 
 .btn-login:hover, .btn-logout:hover {
-  color: #FFD700;
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  color: #87CEEB;
+  text-shadow: 0 0 8px rgba(135, 206, 235, 0.5);
 }
 
 .btn-register {
-  padding: 0.5rem 1.8rem;
+  padding: 0.6rem 2rem;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 700;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #8B0000;
+  background: linear-gradient(135deg, #E0F7FA, #87CEEB);
+  color: #003366;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3);
   text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
 }
 
 .btn-register:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 165, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
   filter: brightness(1.1);
 }
 
@@ -327,9 +328,9 @@ authStore.checkAuth()
 
 /* 页脚 */
 .footer {
-  background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(40,10,10,0.6));
+  background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(10, 35, 66, 0.7));
   backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 215, 0, 0.1);
+  border-top: 1px solid rgba(135, 206, 235, 0.1);
   padding: 3rem 2rem;
   margin-top: auto;
   position: relative;
