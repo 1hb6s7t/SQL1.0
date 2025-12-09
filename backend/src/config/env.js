@@ -1,7 +1,21 @@
 /**
  * 环境变量配置
  * 集中管理所有环境变量
+ * 
+ * 安全提示：敏感信息（如API密钥）必须从环境变量读取，不得硬编码
  */
+
+// 验证必需的环境变量
+function validateRequiredEnv(envName, value) {
+  if (!value) {
+    throw new Error(
+      `❌ 错误：缺少必需的环境变量 ${envName}\n` +
+      `请在 backend/.env 文件中设置 ${envName}，或通过环境变量提供。\n` +
+      `可以参考 backend/.env.example 文件。`
+    );
+  }
+  return value;
+}
 
 const config = {
   // 服务器配置
@@ -15,8 +29,8 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || 'sql_learning_platform_secret_key_2024',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   
-  // Qwen AI配置
-  qwenApiKey: process.env.QWEN_API_KEY || 'sk-f7595fe3394f4b81a72f15c929c91e4f',
+  // Qwen AI配置 - 必须从环境变量读取，不允许硬编码
+  qwenApiKey: validateRequiredEnv('QWEN_API_KEY', process.env.QWEN_API_KEY),
   qwenApiUrl: process.env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
   // 代码相关任务使用 qwen3-coder-plus
   qwenCoderModel: process.env.QWEN_CODER_MODEL || 'qwen3-coder-plus',

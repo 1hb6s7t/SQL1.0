@@ -69,31 +69,58 @@ function checkNodeVersion() {
 function createEnvFile() {
   log.title('📝 创建环境配置文件');
   
+  const envPath = path.join(__dirname, '..', 'backend', '.env');
+  const envExamplePath = path.join(__dirname, '..', 'backend', '.env.example');
+  
+  // 检查是否已存在 .env 文件
+  if (fs.existsSync(envPath)) {
+    log.warning('环境配置文件已存在: backend/.env');
+    log.info('如需重新配置，请手动编辑 backend/.env 文件');
+    return true;
+  }
+  
+  // 如果存在 .env.example，复制它作为模板
+  if (fs.existsSync(envExamplePath)) {
+    try {
+      fs.copyFileSync(envExamplePath, envPath);
+      log.success('已从 .env.example 创建环境配置文件: backend/.env');
+      log.warning('⚠️  请务必编辑 backend/.env 文件，设置您的 API 密钥和其他敏感信息！');
+      return true;
+    } catch (error) {
+      log.error('复制环境配置文件失败: ' + error.message);
+    }
+  }
+  
+  // 如果不存在 .env.example，创建基础模板
   const envContent = `# 服务器配置
 PORT=3000
 NODE_ENV=development
 
 # 数据库配置 (NeonDB PostgreSQL)
-DATABASE_URL=postgresql://neondb_owner:npg_9VrHRgt4KyxT@ep-bitter-flower-adc7sv0w-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+# 请替换为您的数据库连接字符串
+DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require
 
-# JWT密钥 (请在生产环境中更换为更安全的密钥)
-JWT_SECRET=sql_learning_platform_secret_key_2024
+# JWT密钥 (请在生产环境中使用强随机密钥)
+JWT_SECRET=your_jwt_secret_key_here
 JWT_EXPIRES_IN=7d
 
 # Qwen AI API配置
-QWEN_API_KEY=sk-79bf85aad3e94afb9ea071c617d32c3b
+# ⚠️ 重要：请从阿里云通义千问控制台获取您的API密钥
+# 访问：https://dashscope.console.aliyun.com/
+QWEN_API_KEY=your_qwen_api_key_here
 QWEN_API_URL=https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
-QWEN_MODEL=qwen-plus
+QWEN_CODER_MODEL=qwen3-coder-plus
+QWEN_MAX_MODEL=qwen-max
+QWEN_MODEL=qwen3-coder-plus
 
 # 前端URL (CORS配置)
 FRONTEND_URL=http://localhost:5173
 `;
 
-  const envPath = path.join(__dirname, '..', 'backend', '.env');
-  
   try {
     fs.writeFileSync(envPath, envContent);
     log.success('环境配置文件已创建: backend/.env');
+    log.warning('⚠️  请务必编辑 backend/.env 文件，设置您的 API 密钥和其他敏感信息！');
     return true;
   } catch (error) {
     log.error('创建环境配置文件失败: ' + error.message);

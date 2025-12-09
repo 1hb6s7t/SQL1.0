@@ -135,18 +135,23 @@ PORT=3000
 NODE_ENV=development
 
 # 数据库配置 (NeonDB PostgreSQL)
-DATABASE_URL=postgresql://neondb_owner:npg_9VrHRgt4KyxT@ep-bitter-flower-adc7sv0w-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+# 请替换为您的数据库连接字符串
+DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require
 
-# JWT密钥
-JWT_SECRET=sql_learning_platform_secret_key_2024
+# JWT密钥 (请在生产环境中使用强随机密钥)
+JWT_SECRET=your_jwt_secret_key_here
 JWT_EXPIRES_IN=7d
 
 # Qwen AI API配置
-QWEN_API_KEY=sk-79bf85aad3e94afb9ea071c617d32c3b
+# ⚠️ 重要：请从阿里云通义千问控制台获取您的API密钥
+# 访问：https://dashscope.console.aliyun.com/
+QWEN_API_KEY=your_qwen_api_key_here
 QWEN_API_URL=https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
-QWEN_MODEL=qwen-plus
+QWEN_CODER_MODEL=qwen3-coder-plus
+QWEN_MAX_MODEL=qwen-max
+QWEN_MODEL=qwen3-coder-plus
 
-# 前端URL
+# 前端URL (CORS配置)
 FRONTEND_URL=http://localhost:5173
 ```
 

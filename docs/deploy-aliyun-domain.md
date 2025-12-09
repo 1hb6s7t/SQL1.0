@@ -72,11 +72,17 @@ cd /var/www/sql-learning/backend
 cat > .env << 'EOF'
 PORT=3000
 NODE_ENV=production
-DATABASE_URL=postgresql://neondb_owner:npg_9VrHRgt4KyxT@ep-bitter-flower-adc7sv0w-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
-JWT_SECRET=liujun_sql_platform_super_secret_key_2024
+# 请替换为您的数据库连接字符串
+DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require
+# 请使用强随机密钥
+JWT_SECRET=your_strong_jwt_secret_key_here
 JWT_EXPIRES_IN=7d
-QWEN_API_KEY=sk-f7595fe3394f4b81a72f15c929c91e4f
+# ⚠️ 重要：请从阿里云通义千问控制台获取您的API密钥
+# 访问：https://dashscope.console.aliyun.com/
+QWEN_API_KEY=your_qwen_api_key_here
 QWEN_API_URL=https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+QWEN_CODER_MODEL=qwen3-coder-plus
+QWEN_MAX_MODEL=qwen-max
 QWEN_MODEL=qwen3-coder-plus
 FRONTEND_URL=https://liujun-sql.xyz
 EOF

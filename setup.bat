@@ -70,21 +70,28 @@ echo PORT=3000
 echo NODE_ENV=development
 echo.
 echo # 数据库配置 ^(NeonDB PostgreSQL^)
-echo DATABASE_URL=postgresql://neondb_owner:npg_9VrHRgt4KyxT@ep-bitter-flower-adc7sv0w-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+echo # 请替换为您的数据库连接字符串
+echo DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require
 echo.
-echo # JWT密钥
-echo JWT_SECRET=sql_learning_platform_secret_key_2024
+echo # JWT密钥 ^(请在生产环境中使用强随机密钥^)
+echo JWT_SECRET=your_jwt_secret_key_here
 echo JWT_EXPIRES_IN=7d
 echo.
 echo # Qwen AI API配置
-echo QWEN_API_KEY=sk-79bf85aad3e94afb9ea071c617d32c3b
+echo # ⚠️ 重要：请从阿里云通义千问控制台获取您的API密钥
+echo # 访问：https://dashscope.console.aliyun.com/
+echo QWEN_API_KEY=your_qwen_api_key_here
 echo QWEN_API_URL=https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
-echo QWEN_MODEL=qwen-plus
+echo QWEN_CODER_MODEL=qwen3-coder-plus
+echo QWEN_MAX_MODEL=qwen-max
+echo QWEN_MODEL=qwen3-coder-plus
 echo.
-echo # 前端URL
+echo # 前端URL ^(CORS配置^)
 echo FRONTEND_URL=http://localhost:5173
 ) > backend\.env
 echo ✓ 环境配置文件已创建
+echo.
+echo ⚠️  警告：请务必编辑 backend\.env 文件，设置您的 API 密钥和其他敏感信息！
 
 :: 初始化数据库
 echo.
