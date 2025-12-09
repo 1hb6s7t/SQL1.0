@@ -203,7 +203,7 @@ onMounted(async () => {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #FFD700, #F0E68C);
+  background: linear-gradient(135deg, #00BFFF, #87CEEB);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -240,11 +240,11 @@ onMounted(async () => {
 .code-preview {
   width: 100%;
   max-width: 480px;
-  background: rgba(26, 5, 5, 0.9);
+  background: rgba(5, 10, 26, 0.9);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(0, 191, 255, 0.2);
   transform: rotateY(-10deg) rotateX(5deg);
   transition: transform 0.5s ease;
 }
@@ -287,7 +287,7 @@ onMounted(async () => {
   font-family: var(--font-mono);
 }
 
-.code-content .keyword { color: #FFD700; font-weight: bold; }
+.code-content .keyword { color: #00BFFF; font-weight: bold; }
 .code-content .string { color: #98FB98; }
 .code-content .number { color: #FF7F50; }
 
@@ -334,7 +334,7 @@ onMounted(async () => {
 }
 
 .feature-card {
-  background: rgba(100, 0, 0, 0.4);
+  background: rgba(0, 31, 63, 0.4);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 2rem 1.5rem;
@@ -347,13 +347,13 @@ onMounted(async () => {
   transform: translateY(-10px);
   border-color: var(--accent-primary);
   box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
-  background: rgba(120, 0, 0, 0.6);
+  background: rgba(0, 51, 102, 0.6);
 }
 
 .feature-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+  filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.5));
 }
 
 .feature-card h3 {
@@ -380,7 +380,7 @@ onMounted(async () => {
 }
 
 .knowledge-card {
-  background: rgba(100, 0, 0, 0.4);
+  background: rgba(0, 31, 63, 0.4);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
@@ -477,7 +477,7 @@ onMounted(async () => {
   display: flex;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  background: rgba(100, 0, 0, 0.4);
+  background: rgba(0, 31, 63, 0.4);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   transition: all 0.3s ease;
@@ -485,7 +485,7 @@ onMounted(async () => {
 }
 
 .comment-item:hover {
-  background: rgba(120, 0, 0, 0.6);
+  background: rgba(0, 51, 102, 0.6);
   border-color: var(--accent-primary);
 }
 
@@ -493,8 +493,8 @@ onMounted(async () => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #8B0000;
+  background: linear-gradient(135deg, #00BFFF, #1E90FF);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -536,7 +536,7 @@ onMounted(async () => {
 .cta {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+  background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(30, 144, 255, 0.1));
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   margin: 2rem 0;
@@ -551,7 +551,7 @@ onMounted(async () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(0, 191, 255, 0.2) 0%, transparent 70%);
   pointer-events: none;
 }
 

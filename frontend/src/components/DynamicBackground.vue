@@ -20,8 +20,10 @@ let animationFrame = null
 let particles = []
 let width = 0
 let height = 0
+let mouseX = 0
+let mouseY = 0
 
-// 粒子类 - 升级为“金粉”效果
+// 粒子类 - 升级为“科技蓝”效果，带鼠标互动
 class Particle {
   constructor() {
     this.reset(true)
@@ -30,20 +32,43 @@ class Particle {
   reset(initial = false) {
     this.x = Math.random() * width
     this.y = initial ? Math.random() * height : -10
-    // 粒子更小，更密集
+    // 粒子大小
     this.size = Math.random() * 2 + 0.5
-    // 缓慢飘落
-    this.speedX = Math.random() * 0.4 - 0.2
-    this.speedY = Math.random() * 0.5 + 0.1
+    // 基础速度
+    this.baseSpeedX = Math.random() * 0.4 - 0.2
+    this.baseSpeedY = Math.random() * 0.5 + 0.2
+    this.speedX = this.baseSpeedX
+    this.speedY = this.baseSpeedY
+    
     this.opacity = Math.random() * 0.6 + 0.2
     this.life = Math.random() * 200 + 100
-    // 蓝白配色 - 白色带一点蓝
-    this.color = `rgba(220, 240, 255, ${this.opacity})`
+    // 蓝白配色
+    const isWhite = Math.random() > 0.3
+    this.color = isWhite 
+      ? `rgba(255, 255, 255, ${this.opacity})` 
+      : `rgba(0, 191, 255, ${this.opacity})`
   }
 
   update() {
+    // 鼠标互动逻辑
+    const dx = mouseX - this.x
+    const dy = mouseY - this.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    const maxDistance = 200
+    const force = (maxDistance - distance) / maxDistance
+
+    if (distance < maxDistance) {
+      const angle = Math.atan2(dy, dx)
+      const moveX = Math.cos(angle) * force * 2
+      const moveY = Math.sin(angle) * force * 2
+      
+      this.x -= moveX
+      this.y -= moveY
+    }
+
     this.x += this.speedX
     this.y += this.speedY
+    
     // 简单的正弦摆动
     this.x += Math.sin(this.y * 0.01) * 0.1
     
@@ -61,13 +86,18 @@ class Particle {
     ctx.fill()
     
     // 偶尔闪烁
-    if (Math.random() > 0.98) {
+    if (Math.random() > 0.99) {
       ctx.shadowBlur = 8
-      ctx.shadowColor = '#FFFFFF'
+      ctx.shadowColor = '#00BFFF'
     } else {
       ctx.shadowBlur = 0
     }
   }
+}
+
+const handleMouseMove = (e) => {
+  mouseX = e.clientX
+  mouseY = e.clientY
 }
 
 const init = () => {
@@ -75,8 +105,8 @@ const init = () => {
   ctx = canvas.value.getContext('2d')
   resize()
   
-  // 增加粒子数量，制造“繁星”感
-  const particleCount = Math.min(width * 0.2, 250)
+  // 增加粒子数量
+  const particleCount = Math.min(width * 0.2, 300)
   particles = []
   for (let i = 0; i < particleCount; i++) {
     particles.push(new Particle())
@@ -107,11 +137,13 @@ const animate = () => {
 onMounted(() => {
   init()
   window.addEventListener('resize', resize)
+  window.addEventListener('mousemove', handleMouseMove)
 })
 
 onUnmounted(() => {
   if (animationFrame) cancelAnimationFrame(animationFrame)
   window.removeEventListener('resize', resize)
+  window.removeEventListener('mousemove', handleMouseMove)
 })
 </script>
 
@@ -123,7 +155,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-color: #001a33; /* 兜底色 - 深蓝 */
+  background-color: #001f3f; /* 兜底色 - 深蓝 */
   overflow: hidden;
 }
 
@@ -134,13 +166,13 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/blue-white-bg.png');
+  background-image: url('/lb.png');
   background-size: cover;
-  background-position: center center;
+  background-position: center top;
   background-repeat: no-repeat;
-  /* 轻微放大以支持视差效果（这里先做静态） */
+  /* 轻微放大以支持视差效果 */
   transform: scale(1.05);
-  filter: brightness(0.9) contrast(1.1); /* 稍微压暗，增加对比度 */
+  filter: brightness(0.9) contrast(1.1) saturate(1.1); /* 调整亮度对比度 */
 }
 
 canvas {
@@ -152,7 +184,7 @@ canvas {
   pointer-events: none;
 }
 
-/* 氛围遮罩 - 蓝色光晕，顶部深色渐变 */
+/* 氛围遮罩 - 蓝色系渐变 */
 .atmosphere-overlay {
   position: absolute;
   top: 0;
@@ -162,9 +194,9 @@ canvas {
   z-index: 2;
   background: linear-gradient(
     to bottom,
-    rgba(0, 20, 40, 0.4) 0%,
-    rgba(0, 50, 100, 0.2) 40%,
-    rgba(255, 255, 255, 0.1) 100%
+    rgba(0, 31, 63, 0.5) 0%,
+    rgba(0, 51, 102, 0.2) 40%,
+    rgba(0, 191, 255, 0.1) 100%
   );
   pointer-events: none;
 }

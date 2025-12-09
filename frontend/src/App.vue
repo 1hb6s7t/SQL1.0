@@ -130,21 +130,21 @@ authStore.checkAuth()
   top: 0;
   z-index: 100;
   /* 混合深蓝背景，保持透亮感 */
-  background: rgba(10, 35, 66, 0.85);
+  background: rgba(0, 31, 63, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(135, 206, 235, 0.3);
-  padding: 0 1rem; /* 减少两侧留白 */
+  border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+  padding: 0 1rem;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 }
 
 .nav-container {
-  max-width: 1400px;
+  max-width: 1600px; /* 加宽以减少留白 */
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 100px; /* 增加高度以容纳更大的校标 */
+  height: 90px; /* 增加高度 */
 }
 
 .nav-brand {
@@ -156,52 +156,52 @@ authStore.checkAuth()
 }
 
 .nav-brand:hover {
-  opacity: 0.9;
+  opacity: 1;
 }
 
 .brand-logo {
-  height: 85px; /* 放大校标，更显眼 */
+  height: 72px; /* 放大校标 */
   width: auto;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
   transition: transform 0.3s ease;
 }
 
 .brand-logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .brand-divider {
   width: 2px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .brand-text {
-  font-size: 1.6rem; /* 字体加大 */
+  font-size: 1.5rem; /* 放大字体 */
   font-weight: 700;
   color: #FFFFFF;
   letter-spacing: 1.5px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 8px rgba(0, 191, 255, 0.5);
 }
 
 /* 导航链接 - 胶囊式设计 */
 .nav-links {
   display: flex;
   gap: 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.6rem 0.8rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.6rem;
   border-radius: 99px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .nav-link {
-  padding: 0.6rem 1.4rem;
+  padding: 0.6rem 1.5rem; /* 增加点击区域 */
   text-decoration: none;
   color: rgba(255, 255, 255, 0.9);
   border-radius: 99px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 600;
-  font-size: 1.1rem; /* 字体加大 */
+  font-size: 1.05rem; /* 放大字体 */
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -214,26 +214,27 @@ authStore.checkAuth()
 .nav-link:hover {
   color: #FFFFFF;
   background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
 }
 
 .nav-link.router-link-active {
-  color: #003366;
-  background: linear-gradient(135deg, #E0F7FA, #87CEEB);
+  color: #fff;
+  background: linear-gradient(135deg, #00BFFF, #1E90FF);
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
 }
 
 /* 用户区域 */
 .nav-auth {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .nav-user {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
   text-decoration: none;
   color: #fff;
   padding: 0.4rem 1.2rem 0.4rem 0.4rem;
@@ -244,27 +245,28 @@ authStore.checkAuth()
 }
 
 .nav-user:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #87CEEB;
-  box-shadow: 0 0 10px rgba(135, 206, 235, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #00BFFF;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
 }
 
 .user-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #E0F7FA, #87CEEB);
-  color: #003366;
+  background: linear-gradient(135deg, #00BFFF, #1E90FF);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn-login, .btn-logout {
-  padding: 0.6rem 1.4rem;
-  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  border-radius: 10px;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.2s ease;
@@ -272,12 +274,13 @@ authStore.checkAuth()
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .btn-login:hover, .btn-logout:hover {
-  color: #87CEEB;
-  text-shadow: 0 0 8px rgba(135, 206, 235, 0.5);
+  color: #00BFFF;
+  text-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .btn-register {
@@ -285,17 +288,18 @@ authStore.checkAuth()
   border-radius: 50px;
   text-decoration: none;
   font-weight: 700;
-  background: linear-gradient(135deg, #E0F7FA, #87CEEB);
-  color: #003366;
+  background: linear-gradient(135deg, #00BFFF, #1E90FF);
+  color: #fff;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3);
+  box-shadow: 0 4px 20px rgba(30, 144, 255, 0.4);
   text-transform: uppercase;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
 }
 
 .btn-register:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+  box-shadow: 0 8px 25px rgba(30, 144, 255, 0.6);
   filter: brightness(1.1);
 }
 
@@ -328,9 +332,9 @@ authStore.checkAuth()
 
 /* 页脚 */
 .footer {
-  background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(10, 35, 66, 0.7));
+  background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0, 31, 63, 0.8));
   backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(135, 206, 235, 0.1);
+  border-top: 1px solid rgba(0, 191, 255, 0.2);
   padding: 3rem 2rem;
   margin-top: auto;
   position: relative;
@@ -369,7 +373,7 @@ authStore.checkAuth()
 }
 
 .footer-links a:hover {
-  color: #FFD700;
+  color: #00BFFF;
 }
 
 /* Toast消息 */

@@ -1,33 +1,33 @@
 /* SQL学习平台 - 蓝白科技主题 */
 
 :root {
-  /* 主色调 - 蓝白系 */
-  --accent-primary: #FFFFFF;    /* 纯白 */
-  --accent-secondary: #87CEEB;  /* 天空蓝 */
-  --accent-tertiary: #B0E0E6;   /* 粉蓝 */
-  --accent-glow: rgba(135, 206, 235, 0.6); /* 蓝色光晕 */
+  /* 主色调 - 蓝色系 */
+  --accent-primary: #00BFFF;    /* 深天蓝 */
+  --accent-secondary: #1E90FF;  /* 道奇蓝 */
+  --accent-tertiary: #87CEEB;   /* 天空蓝 */
+  --accent-glow: rgba(0, 191, 255, 0.6); /* 蓝色光晕 */
   
   /* 背景色 - 蓝色系 */
-  --bg-primary: #0A2342;        /* 深海军蓝 */
-  --bg-gradient-start: #001529; /* 极深蓝 */
-  --bg-gradient-end: #003366;   /* 深蓝 */
+  --bg-primary: #001f3f;        /* 深海军蓝 */
+  --bg-gradient-start: #001f3f; /* 渐变深蓝 */
+  --bg-gradient-end: #003366;   /* 渐变亮蓝 */
   
-  --bg-secondary: rgba(10, 35, 66, 0.7);   /* 卡片背景 - 半透明深蓝 */
-  --bg-tertiary: rgba(255, 255, 255, 0.1);  /* 悬停背景 - 淡白 */
-  --bg-code: #001020;                     /* 代码块背景 - 极深蓝黑 */
+  --bg-secondary: rgba(0, 31, 63, 0.6);   /* 卡片背景 - 半透明深蓝 */
+  --bg-tertiary: rgba(0, 191, 255, 0.1);  /* 悬停背景 - 淡蓝 */
+  --bg-code: #0a192f;                     /* 代码块背景 - 极深蓝黑 */
   
   /* 文字色 */
   --text-primary: #FFFFFF;      /* 纯白 */
-  --text-secondary: #E0F7FA;    /* 极淡蓝 */
-  --text-muted: #B0C4DE;        /* 钢蓝灰色 */
+  --text-secondary: #E0F7FA;    /* 淡青 */
+  --text-muted: #B0C4DE;        /* 亮钢蓝 */
   
   /* 边框色 */
-  --border-color: rgba(255, 255, 255, 0.2); /* 20%透明度白色 */
-  --border-light: rgba(255, 255, 255, 0.5); /* 50%透明度白色 */
+  --border-color: rgba(0, 191, 255, 0.3); /* 30%透明度蓝色 */
+  --border-light: rgba(0, 191, 255, 0.6); /* 60%透明度蓝色 */
   
-  /* 状态色 - 调整为适应蓝色背景 */
+  /* 状态色 */
   --success: #00FF7F; /* 春绿 */
-  --warning: #FFD700; /* 金色保持作为警告 */
+  --warning: #FFD700; /* 金色 */
   --error: #FF4500;   /* 橙红 */
   --info: #00BFFF;    /* 深天蓝 */
   
@@ -41,10 +41,10 @@
   --radius-lg: 12px;
   --radius-xl: 20px;
   
-  /* 阴影 - 改为蓝色光晕感 */
+  /* 阴影 - 蓝色光晕感 */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(135, 206, 235, 0.15);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(135, 206, 235, 0.25);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 191, 255, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 191, 255, 0.2);
   --shadow-glow: 0 0 15px var(--accent-glow);
 }
 
@@ -106,16 +106,16 @@ button {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #4682B4, #1E90FF);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, #00BFFF, #1E90FF);
+  color: #FFFFFF; /* 按钮文字用纯白 */
   border: none;
   box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.6);
-  background: linear-gradient(135deg, #5B9BD5, #4DA6FF);
+  box-shadow: 0 6px 20px rgba(0, 191, 255, 0.6);
+  background: linear-gradient(135deg, #87CEEB, #1E90FF);
 }
 
 .btn-secondary {
@@ -126,7 +126,7 @@ button {
 
 .btn-secondary:hover {
   background: var(--accent-primary);
-  color: var(--bg-primary);
+  color: #001f3f;
   box-shadow: 0 0 15px var(--accent-glow);
 }
 
@@ -137,7 +137,7 @@ button {
 
 .btn-ghost:hover {
   color: var(--accent-primary);
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(0, 191, 255, 0.1);
 }
 
 /* 输入框样式 */
@@ -157,7 +157,7 @@ input, textarea, select {
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -167,7 +167,7 @@ input::placeholder, textarea::placeholder {
 
 /* 卡片样式 - 磨砂玻璃蓝 */
 .card {
-  background: rgba(10, 35, 66, 0.6);
+  background: rgba(0, 31, 63, 0.4);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
@@ -186,15 +186,15 @@ input::placeholder, textarea::placeholder {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-secondary), transparent);
-  opacity: 0.7;
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  opacity: 0.5;
 }
 
 .card:hover {
-  border-color: var(--accent-secondary);
+  border-color: var(--accent-primary);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  background: rgba(20, 50, 90, 0.7);
+  background: rgba(0, 51, 102, 0.5);
 }
 
 .card-header {
@@ -220,7 +220,7 @@ code {
   padding: 0.2em 0.4em;
   border-radius: var(--radius-sm);
   font-size: 0.875em;
-  color: #FF7F50; /* 珊瑚红 */
+  color: #00BFFF; /* 深天蓝 */
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -256,9 +256,9 @@ pre code {
 }
 
 .tag-primary {
-  background: rgba(255, 215, 0, 0.15);
+  background: rgba(0, 191, 255, 0.15);
   color: var(--accent-primary);
-  border-color: rgba(255, 215, 0, 0.3);
+  border-color: rgba(0, 191, 255, 0.3);
 }
 
 /* 加载动画 */
@@ -272,7 +272,7 @@ pre code {
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(255, 215, 0, 0.3);
+  border: 3px solid rgba(0, 191, 255, 0.3);
   border-top-color: var(--accent-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -294,7 +294,7 @@ pre code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 215, 0, 0.3);
+  background: rgba(0, 191, 255, 0.3);
   border-radius: 4px;
 }
 
@@ -305,7 +305,7 @@ pre code {
 /* 选中文字样式 */
 ::selection {
   background: var(--accent-primary);
-  color: var(--bg-primary);
+  color: #001f3f;
 }
 
 /* 高亮.js主题微调 */
@@ -313,7 +313,7 @@ pre code {
   background: transparent !important;
   color: #e0e0e0 !important;
 }
-.hljs-keyword { color: #FFD700 !important; font-weight: bold; }
+.hljs-keyword { color: #00BFFF !important; font-weight: bold; }
 .hljs-string { color: #98FB98 !important; }
 .hljs-number { color: #FF7F50 !important; }
 .hljs-function { color: #87CEFA !important; }
