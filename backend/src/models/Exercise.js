@@ -261,42 +261,41 @@ class Exercise {
    */
   static async getTableSchema() {
     return {
+      projectName: '智慧农业传感器监测系统',
+      projectDescription: '基于农田传感器实时监测系统，通过单表查询实现传感器状态核查、环境数据筛选、异常值统计等高频工程需求',
       tables: [
         {
-          name: 'Student',
-          actualName: 'practice_student',
-          description: '学生信息表',
+          name: 'sensor_monitor',
+          actualName: 'sensor_monitor',
+          description: '传感器监测记录表',
           columns: [
-            { name: 'Sno', type: 'CHAR(10)', description: '学号（主键）' },
-            { name: 'Sname', type: 'CHAR(20)', description: '姓名' },
-            { name: 'Ssex', type: 'CHAR(2)', description: '性别' },
-            { name: 'Sage', type: 'INT', description: '年龄' },
-            { name: 'Sdept', type: 'CHAR(20)', description: '所在系' }
-          ]
-        },
-        {
-          name: 'Course',
-          actualName: 'practice_course',
-          description: '课程信息表',
-          columns: [
-            { name: 'Cno', type: 'CHAR(4)', description: '课程号（主键）' },
-            { name: 'Cname', type: 'CHAR(40)', description: '课程名' },
-            { name: 'Cpno', type: 'CHAR(4)', description: '先修课程号' },
-            { name: 'Ccredit', type: 'SMALLINT', description: '学分' }
-          ]
-        },
-        {
-          name: 'SC',
-          actualName: 'practice_sc',
-          description: '选课成绩表',
-          columns: [
-            { name: 'Sno', type: 'CHAR(10)', description: '学号（外键）' },
-            { name: 'Cno', type: 'CHAR(4)', description: '课程号（外键）' },
-            { name: 'Grade', type: 'INT', description: '成绩' }
+            { name: 'monitor_id', type: 'INT', description: '监测记录唯一ID（主键，自增）' },
+            { name: 'sensor_id', type: 'VARCHAR(20)', description: '传感器编号（如：S202501、S202508）' },
+            { name: 'monitor_type', type: 'VARCHAR(20)', description: '监测类型（温度、湿度、土壤含水量）' },
+            { name: 'monitor_value', type: 'DECIMAL(6,2)', description: '监测数值（温度：℃；湿度：%）' },
+            { name: 'monitor_time', type: 'TIMESTAMP', description: '监测时间（格式：YYYY-MM-DD HH:MM:SS）' },
+            { name: 'location', type: 'VARCHAR(30)', description: '安装位置（如：东区农田、西区大棚）' },
+            { name: 'status', type: 'VARCHAR(10)', description: '设备状态（正常、异常、离线时为NULL）' }
           ]
         }
       ],
-      note: '注意：实际查询时请使用 practice_student, practice_course, practice_sc 作为表名'
+      sampleData: [
+        { sensor_id: 'S202501', monitor_type: '温度', monitor_value: 25.30, location: '东区农田', status: '正常' },
+        { sensor_id: 'S202504', monitor_type: '温度', monitor_value: 32.10, location: '南区果园', status: '异常' },
+        { sensor_id: 'S202505', monitor_type: '土壤含水量', monitor_value: 18.30, location: '西区大棚', status: null }
+      ],
+      knowledgePoints: [
+        '选择表中的若干列：SELECT 列1, 列2 FROM 表名',
+        '去重查询：DISTINCT 短语消除重复行',
+        '条件查询：比较运算符（=、>、<、>=、<=、<>）',
+        '范围查询：BETWEEN...AND...',
+        '模糊查询：LIKE（%代表任意长度字符串，_代表单个字符）',
+        '空值查询：IS NULL、IS NOT NULL',
+        '排序查询：ORDER BY 列名 [ASC|DESC]',
+        '聚合函数：COUNT、SUM、AVG、MAX、MIN',
+        '多重条件：AND、OR 组合条件'
+      ],
+      note: '本项目基于智慧农业传感器监测场景，所有SQL代码可直接执行，适合SQL单表查询学习'
     };
   }
 }

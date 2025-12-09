@@ -27,7 +27,9 @@
 1. [ngrok 内网穿透部署](./deploy-ngrok.md) - 国外服务，需要科学上网
 2. [cpolar 内网穿透部署](./deploy-cpolar.md) - 国内服务，推荐
 3. [Vercel + Render 免费部署](./deploy-free-platforms.md) - 零成本正式部署
-4. [云服务器部署](./deploy-cloud-server.md) - 最稳定的方案
+4. [Netlify 部署指南](./deploy-netlify.md) - Netlify 前端 + Render 后端
+5. [云服务器部署](./deploy-cloud-server.md) - 最稳定的方案
+6. [更新 API 密钥指南](./update-api-key.md) - 如何在已部署项目上更新千问 API 密钥
 
 ## 快速开始
 

@@ -1,23 +1,25 @@
 <template>
   <div class="exercises-page">
     <div class="page-header">
-      <h1>📝 SQL 例题练习</h1>
-      <p class="subtitle">通过实践掌握SQL查询技能</p>
+      <h1>🌾 智慧农业SQL实战练习</h1>
+      <p class="subtitle">基于传感器监测系统，掌握SQL单表查询核心技能</p>
     </div>
 
     <!-- 数据库结构说明 -->
     <div class="schema-section card">
       <div class="schema-header" @click="showSchema = !showSchema">
-        <h3>📊 练习数据库结构</h3>
+        <h3>🌾 {{ schema.projectName || '练习数据库结构' }}</h3>
         <span class="toggle-icon">{{ showSchema ? '▼' : '▶' }}</span>
       </div>
       <div v-if="showSchema" class="schema-content">
         <div class="schema-intro">
-          <p>本练习基于学生选课数据库，包含以下三个表：</p>
+          <p>{{ schema.projectDescription || '本练习基于传感器监测数据库' }}</p>
         </div>
+        
+        <!-- 表结构展示 -->
         <div class="tables-grid">
           <div v-for="table in schema.tables" :key="table.name" class="table-card">
-            <h4>{{ table.name }} <span class="actual-name">({{ table.actualName }})</span></h4>
+            <h4>{{ table.name }} <span class="actual-name" v-if="table.actualName !== table.name">({{ table.actualName }})</span></h4>
             <p class="table-desc">{{ table.description }}</p>
             <table class="column-table">
               <thead>
@@ -37,8 +39,36 @@
             </table>
           </div>
         </div>
-        <div class="schema-note">
-          <strong>⚠️ 注意：</strong>{{ schema.note }}
+
+        <!-- 示例数据 -->
+        <div v-if="schema.sampleData && schema.sampleData.length > 0" class="sample-data-section">
+          <h4>📋 示例数据</h4>
+          <div class="sample-table-wrapper">
+            <table class="sample-table">
+              <thead>
+                <tr>
+                  <th v-for="key in Object.keys(schema.sampleData[0])" :key="key">{{ key }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(row, index) in schema.sampleData" :key="index">
+                  <td v-for="key in Object.keys(row)" :key="key">{{ row[key] ?? 'NULL' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 知识点列表 -->
+        <div v-if="schema.knowledgePoints && schema.knowledgePoints.length > 0" class="knowledge-points-section">
+          <h4>📚 涵盖知识点</h4>
+          <ul class="knowledge-list">
+            <li v-for="(point, index) in schema.knowledgePoints" :key="index">{{ point }}</li>
+          </ul>
+        </div>
+
+        <div class="schema-note" v-if="schema.note">
+          <strong>💡 说明：</strong>{{ schema.note }}
         </div>
       </div>
     </div>
@@ -64,7 +94,7 @@
           </div>
           <div class="exercise-info">
             <h4>{{ exercise.order_index }}. {{ exercise.title }}</h4>
-            <p class="exercise-desc">{{ exercise.description }}</p>
+            <p class="exercise-desc">{{ truncateDescription(exercise.description) }}</p>
             <div class="exercise-meta">
               <span class="difficulty" :class="exercise.difficulty">{{ difficultyText[exercise.difficulty] }}</span>
               <span class="category">{{ exercise.category }}</span>
@@ -84,12 +114,17 @@
       <div class="exercise-details">
         <div class="question-box">
           <h4>📌 题目要求</h4>
-          <p>{{ selectedExercise.description }}</p>
+          <p class="description-text">{{ selectedExercise.description }}</p>
         </div>
 
         <div class="hint-box" v-if="selectedExercise.hint">
           <h4>💡 提示</h4>
           <p>{{ selectedExercise.hint }}</p>
+        </div>
+
+        <div class="knowledge-box" v-if="selectedExercise.knowledge_point">
+          <h4>📚 知识点</h4>
+          <p>{{ selectedExercise.knowledge_point }}</p>
         </div>
       </div>
 
@@ -343,6 +378,14 @@ const formatFeedback = (text) => {
     .replace(/\n/g, '<br>')
 }
 
+// 截断描述文字（用于列表展示）
+const truncateDescription = (text) => {
+  if (!text) return ''
+  // 去除【场景】部分，只显示核心描述
+  const cleanText = text.replace(/【场景】[^\n]*\n\n?/g, '')
+  return cleanText.length > 50 ? cleanText.substring(0, 50) + '...' : cleanText
+}
+
 // 初始化
 onMounted(async () => {
   loading.value = true
@@ -388,8 +431,13 @@ onMounted(async () => {
   align-items: center;
   cursor: pointer;
   padding: 1rem;
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(0, 191, 255, 0.1);
   border-radius: var(--radius-md);
+  transition: background 0.3s ease;
+}
+
+.schema-header:hover {
+  background: rgba(0, 191, 255, 0.15);
 }
 
 .schema-header h3 {
@@ -473,10 +521,98 @@ onMounted(async () => {
 
 .schema-note {
   padding: 0.75rem;
-  background: rgba(255, 193, 7, 0.1);
+  background: rgba(0, 191, 255, 0.1);
   border-radius: var(--radius-md);
-  border-left: 3px solid var(--warning);
+  border-left: 3px solid var(--accent-primary);
   font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* 示例数据 */
+.sample-data-section {
+  margin-top: 1.5rem;
+}
+
+.sample-data-section h4 {
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+}
+
+.sample-table-wrapper {
+  overflow-x: auto;
+}
+
+.sample-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.sample-table th,
+.sample-table td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid var(--border-color);
+}
+
+.sample-table th {
+  background: rgba(0, 191, 255, 0.15);
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.sample-table td {
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 知识点列表 */
+.knowledge-points-section {
+  margin-top: 1.5rem;
+}
+
+.knowledge-points-section h4 {
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+}
+
+.knowledge-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.knowledge-list li {
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 191, 255, 0.08);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-left: 2px solid var(--accent-primary);
+}
+
+/* 知识点框 */
+.knowledge-box {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 3px solid var(--success);
+}
+
+.knowledge-box h4 {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--success);
+}
+
+/* 描述文字样式 */
+.description-text {
+  white-space: pre-line;
+  line-height: 1.7;
 }
 
 /* 例题列表 */
@@ -505,7 +641,7 @@ onMounted(async () => {
 .exercise-card:hover {
   transform: translateX(5px);
   border-color: var(--accent-primary);
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.2);
 }
 
 .exercise-card.completed {
@@ -560,7 +696,7 @@ onMounted(async () => {
 }
 
 .category {
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(0, 191, 255, 0.15);
   color: var(--accent-primary);
 }
 
@@ -619,7 +755,7 @@ onMounted(async () => {
 }
 
 .question-box {
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(0, 191, 255, 0.1);
   border-left: 3px solid var(--accent-primary);
 }
 
@@ -658,7 +794,7 @@ onMounted(async () => {
 .sql-editor textarea:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2);
 }
 
 .editor-actions {
@@ -674,7 +810,7 @@ onMounted(async () => {
 }
 
 .btn-outline:hover {
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(0, 191, 255, 0.1);
 }
 
 /* 结果区域 */
@@ -715,7 +851,7 @@ onMounted(async () => {
 }
 
 .result-table th {
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(0, 191, 255, 0.15);
   color: var(--accent-primary);
 }
 
