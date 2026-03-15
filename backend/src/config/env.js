@@ -8,10 +8,16 @@ function required(name, value) {
   return value
 }
 
+const rawAiBaseUrl = process.env.AI_BASE_URL || process.env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+const normalizedLegacyUrl = rawAiBaseUrl.replace(/\/$/, '')
+const endsWithChatCompletions = /\/chat\/completions$/i.test(normalizedLegacyUrl)
+
 const aiProvider = process.env.AI_PROVIDER || 'openai-compatible'
-const aiBaseUrl = process.env.AI_BASE_URL || process.env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+const aiBaseUrl = endsWithChatCompletions
+  ? normalizedLegacyUrl.replace(/\/chat\/completions$/i, '')
+  : normalizedLegacyUrl
 const aiApiKey = process.env.AI_API_KEY || process.env.QWEN_API_KEY
-const aiChatPath = process.env.AI_CHAT_PATH || '/chat/completions'
+const aiChatPath = process.env.AI_CHAT_PATH || (endsWithChatCompletions ? '/chat/completions' : '/chat/completions')
 const aiAuthScheme = process.env.AI_AUTH_SCHEME || 'Bearer'
 const aiExtraHeaderName = process.env.AI_EXTRA_HEADER_NAME || ''
 const aiExtraHeaderValue = process.env.AI_EXTRA_HEADER_VALUE || ''
@@ -30,10 +36,10 @@ const config = {
   aiExtraHeaderName,
   aiExtraHeaderValue,
   qwenApiKey: aiApiKey,
-  qwenApiUrl: `${aiBaseUrl.replace(/\/$/, '')}${aiChatPath}`,
-  qwenCoderModel: process.env.QWEN_CODER_MODEL || process.env.AI_CODER_MODEL || 'qwen3-coder-plus',
-  qwenMaxModel: process.env.QWEN_MAX_MODEL || process.env.AI_CHAT_MODEL || 'qwen-max',
-  qwenModel: process.env.QWEN_MODEL || process.env.AI_DEFAULT_MODEL || process.env.AI_CHAT_MODEL || 'qwen3-coder-plus',
+  qwenApiUrl: `${aiBaseUrl}${aiChatPath}`,
+  qwenCoderModel: process.env.AI_CODER_MODEL || process.env.QWEN_CODER_MODEL || 'qwen3-coder-plus',
+  qwenMaxModel: process.env.AI_CHAT_MODEL || process.env.QWEN_MAX_MODEL || 'qwen-max',
+  qwenModel: process.env.AI_DEFAULT_MODEL || process.env.AI_CHAT_MODEL || process.env.QWEN_MODEL || 'qwen3-coder-plus',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
   isDev: (process.env.NODE_ENV || 'development') === 'development'
 }
