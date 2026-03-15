@@ -94,7 +94,7 @@ const router = createRouter({
 // 路由守卫
 router.beforeEach(async (to, from, next) => {
   // 设置页面标题
-  document.title = `${to.meta.title || 'SQL学习平台'} - SQL学习平台`
+  document.title = `${to.meta.title || '《数据库原理与应用》智能学习平台'} - 《数据库原理与应用》智能学习平台`
   
   const authStore = useAuthStore()
   

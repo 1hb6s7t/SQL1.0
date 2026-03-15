@@ -11,7 +11,7 @@ const aiService = require('../services/aiService');
  */
 exports.getAllExercises = async (req, res) => {
   try {
-    const exercises = await Exercise.getAll();
+    const exercises = await Exercise.getAll(req.query.projectCode || null);
     res.json({
       success: true,
       data: { exercises }
@@ -71,7 +71,7 @@ exports.getExerciseById = async (req, res) => {
  */
 exports.getTableSchema = async (req, res) => {
   try {
-    const schema = await Exercise.getTableSchema();
+    const schema = await Exercise.getTableSchema(req.query.projectCode || 'exercise1');
     res.json({
       success: true,
       data: { schema }
@@ -195,7 +195,7 @@ exports.submitAnswer = async (req, res) => {
 exports.getUserProgress = async (req, res) => {
   try {
     const userId = req.user.id;
-    const progress = await Exercise.getUserProgress(userId);
+    const progress = await Exercise.getUserProgress(userId, req.query.projectCode || null);
     
     // 计算统计数据
     const total = progress.length;

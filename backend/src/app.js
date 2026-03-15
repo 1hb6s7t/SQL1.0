@@ -1,5 +1,5 @@
 /**
- * SQL学习平台 - 后端API服务
+ * 《数据库原理与应用》智能学习平台 - 后端API服务
  * 主应用入口
  */
 
@@ -99,7 +99,7 @@ app.use('/api/exercises', exerciseRoutes);
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'SQL学习平台API运行正常',
+    message: '《数据库原理与应用》智能学习平台API运行正常',
     timestamp: new Date().toISOString(),
     version: '1.0.0'
   });
@@ -109,7 +109,7 @@ app.get('/api/health', (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     success: true,
-    message: '欢迎使用SQL学习平台API',
+    message: '欢迎使用《数据库原理与应用》智能学习平台API',
     version: '1.0.0',
     endpoints: {
       auth: {
@@ -194,7 +194,7 @@ app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
-║   🎓 SQL学习平台后端服务启动成功！                          ║
+║   🎓 《数据库原理与应用》智能学习平台后端服务启动成功！                          ║
 ║                                                            ║
 ║   📍 服务地址: http://localhost:${PORT}                      ║
 ║   📚 API文档: http://localhost:${PORT}/api                   ║

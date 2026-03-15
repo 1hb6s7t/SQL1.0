@@ -1,15 +1,15 @@
 <template>
   <div id="app" class="app-container">
-    <!-- 动态背景 -->
     <DynamicBackground />
 
-    <!-- 导航栏 -->
     <nav class="navbar">
       <div class="nav-container">
         <router-link to="/" class="nav-brand">
-          <img src="/tb.png" alt="哈尔滨剑桥学院" class="brand-logo" />
-          <span class="brand-divider"></span>
-          <span class="brand-text">SQL学习平台</span>
+          <div class="brand-mark">DB</div>
+          <div class="brand-copy">
+            <span class="brand-text">《数据库原理与应用》智能学习平台</span>
+            <span class="brand-subtext">Database Principles & Applications Smart Learning Platform</span>
+          </div>
         </router-link>
         
         <div class="nav-links">
@@ -46,7 +46,6 @@
       </div>
     </nav>
 
-    <!-- 主内容区 -->
     <main class="main-content">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -55,24 +54,22 @@
       </router-view>
     </main>
 
-    <!-- 页脚 -->
     <footer class="footer">
       <div class="footer-container">
         <div class="footer-logo">
-          <img src="/tb.png" alt="Logo" style="height: 40px; opacity: 0.8;">
+          <div class="footer-mark">DB</div>
         </div>
-        <p>© 2024 哈尔滨剑桥学院 SQL学习平台</p>
+        <p>© 2026 《数据库原理与应用》智能学习平台</p>
         <p class="footer-links">
-          <router-link to="/about">关于我们</router-link>
+          <router-link to="/about">关于平台</router-link>
           <span class="divider">|</span>
-          <a href="#">教学资源</a>
+          <a href="#">课程资源</a>
           <span class="divider">|</span>
           <a href="#">反馈建议</a>
         </p>
       </div>
     </footer>
 
-    <!-- 全局消息提示 -->
     <Transition name="toast">
       <div v-if="toastMessage" class="toast" :class="toastType">
         {{ toastMessage }}
@@ -90,7 +87,6 @@ import DynamicBackground from '@/components/DynamicBackground.vue'
 const authStore = useAuthStore()
 const router = useRouter()
 
-// Toast消息
 const toastMessage = ref('')
 const toastType = ref('info')
 let toastTimer = null
@@ -106,14 +102,12 @@ const showToast = (message, type = 'info', duration = 3000) => {
 
 provide('showToast', showToast)
 
-// 处理登出
 const handleLogout = () => {
   authStore.logout()
   showToast('已退出登录', 'success')
   router.push('/')
 }
 
-// 初始化时检查登录状态
 authStore.checkAuth()
 </script>
 
@@ -124,111 +118,106 @@ authStore.checkAuth()
   flex-direction: column;
 }
 
-/* 导航栏 - 玻璃拟态升级版 */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  /* 混合深蓝背景，保持透亮感 */
-  background: rgba(0, 31, 63, 0.85);
+  background: rgba(8, 18, 40, 0.84);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+  border-bottom: 1px solid rgba(125, 211, 252, 0.18);
   padding: 0 1rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.35);
 }
 
 .nav-container {
-  max-width: 1600px; /* 加宽以减少留白 */
+  max-width: 1600px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 90px; /* 增加高度 */
+  height: 90px;
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   text-decoration: none;
-  transition: opacity 0.3s;
 }
 
-.nav-brand:hover {
-  opacity: 1;
+.brand-mark,
+.footer-mark {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
 }
 
-.brand-logo {
-  height: 72px; /* 放大校标 */
-  width: auto;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  transition: transform 0.3s ease;
-}
-
-.brand-logo:hover {
-  transform: scale(1.08);
-}
-
-.brand-divider {
-  width: 2px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.4);
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
 .brand-text {
-  font-size: 1.5rem; /* 放大字体 */
-  font-weight: 700;
-  color: #FFFFFF;
-  letter-spacing: 1.5px;
-  text-shadow: 0 2px 8px rgba(0, 191, 255, 0.5);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.5px;
 }
 
-/* 导航链接 - 胶囊式设计 */
+.brand-subtext {
+  font-size: 0.75rem;
+  color: rgba(226, 232, 240, 0.7);
+}
+
 .nav-links {
   display: flex;
   gap: 1rem;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(15, 23, 42, 0.45);
   padding: 0.6rem;
   border-radius: 99px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .nav-link {
-  padding: 0.6rem 1.5rem; /* 增加点击区域 */
+  padding: 0.6rem 1.4rem;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(241, 245, 249, 0.92);
   border-radius: 99px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   font-weight: 600;
-  font-size: 1.05rem; /* 放大字体 */
+  font-size: 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.nav-link .icon {
-  font-size: 1.2em;
+  gap: 0.45rem;
 }
 
 .nav-link:hover {
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
   transform: translateY(-1px);
 }
 
 .nav-link.router-link-active {
   color: #fff;
-  background: linear-gradient(135deg, #00BFFF, #1E90FF);
+  background: linear-gradient(135deg, #2563eb, #0891b2);
   font-weight: 700;
-  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.28);
 }
 
-/* 用户区域 */
 .nav-auth {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .nav-user {
@@ -237,194 +226,158 @@ authStore.checkAuth()
   gap: 1rem;
   text-decoration: none;
   color: #fff;
-  padding: 0.4rem 1.2rem 0.4rem 0.4rem;
+  padding: 0.4rem 1.1rem 0.4rem 0.4rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .nav-user:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: #00BFFF;
-  box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(96, 165, 250, 0.5);
 }
 
 .user-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #00BFFF, #1E90FF);
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.btn-login, .btn-logout {
-  padding: 0.6rem 1.5rem;
-  border-radius: 10px;
-  text-decoration: none;
+.user-name {
   font-weight: 600;
-  transition: all 0.2s ease;
-  color: rgba(255, 255, 255, 0.95);
-  background: transparent;
-  border: 1px solid transparent;
-  cursor: pointer;
-  font-size: 1rem;
 }
 
-.btn-login:hover, .btn-logout:hover {
-  color: #00BFFF;
-  text-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.btn-register {
-  padding: 0.6rem 2rem;
-  border-radius: 50px;
-  text-decoration: none;
+.btn-login,
+.btn-register,
+.btn-logout {
+  padding: 0.65rem 1.25rem;
+  border-radius: 12px;
   font-weight: 700;
-  background: linear-gradient(135deg, #00BFFF, #1E90FF);
+  border: none;
+}
+
+.btn-login {
+  color: #e2e8f0;
+  background: rgba(255,255,255,0.06);
+}
+
+.btn-register,
+.btn-logout {
   color: #fff;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(30, 144, 255, 0.4);
-  text-transform: uppercase;
-  font-size: 1rem;
-  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
 }
 
-.btn-register:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(30, 144, 255, 0.6);
-  filter: brightness(1.1);
-}
-
-/* 主内容 */
 .main-content {
   flex: 1;
-  padding: 2rem 1.5rem;
-  max-width: 1400px;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
+  padding: 2rem 1rem 3rem;
 }
 
-/* 页面过渡 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.fade-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-/* 页脚 */
 .footer {
-  background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0, 31, 63, 0.8));
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(0, 191, 255, 0.2);
-  padding: 3rem 2rem;
   margin-top: auto;
-  position: relative;
-  z-index: 1;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(8, 18, 40, 0.72);
+  backdrop-filter: blur(12px);
 }
 
 .footer-container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem 1.5rem;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  color: #cbd5e1;
 }
 
 .footer-logo {
-  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
-.footer p {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
+.footer-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
 }
 
 .footer-links {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
-.footer-links a {
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  transition: color 0.2s ease;
+.divider {
+  margin: 0 0.5rem;
+  color: rgba(148, 163, 184, 0.5);
 }
 
-.footer-links a:hover {
-  color: #00BFFF;
-}
-
-/* Toast消息 */
 .toast {
   position: fixed;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.8rem 2.5rem;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 1rem;
-  z-index: 1000;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  animation: toast-slide-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes toast-slide-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-.toast.info {
-  background: rgba(30, 30, 30, 0.95);
+  right: 1.5rem;
+  bottom: 1.5rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 14px;
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.35);
 }
 
-.toast.success {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff;
-  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+.toast.info { background: #2563eb; }
+.toast.success { background: #16a34a; }
+.toast.error { background: #dc2626; }
+
+.fade-enter-active,
+.fade-leave-active,
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.25s ease;
 }
 
-.toast.error {
-  background: linear-gradient(135deg, #ef4444, #b91c1c);
-  color: #fff;
-  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+.fade-enter-from,
+.fade-leave-to,
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (max-width: 1200px) {
+  .nav-container {
+    height: auto;
+    padding: 1rem 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-radius: 20px;
+  }
 }
 
 @media (max-width: 768px) {
-  .nav-links {
+  .brand-text {
+    font-size: 1rem;
+  }
+
+  .brand-subtext {
     display: none;
   }
-  
+
+  .nav-link {
+    padding: 0.55rem 1rem;
+    font-size: 0.95rem;
+  }
+
   .main-content {
-    padding: 1rem;
+    padding: 1.2rem 0.75rem 2rem;
   }
 }
 </style>

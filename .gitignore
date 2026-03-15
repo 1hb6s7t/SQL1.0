@@ -1,6 +1,9 @@
 # 环境变量文件（包含敏感信息，不应提交到版本控制）
 backend/.env 
 
+# 本地生成账号清单（含测试账号密码，不提交）
+user-accounts.txt
+
 # 构建输出
 frontend/dist/ 
 

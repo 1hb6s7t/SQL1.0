@@ -115,7 +115,7 @@ async function resetUsers() {
     // 保存到文件
     const outputPath = path.join(__dirname, '../../../user-accounts.txt');
     
-    let fileContent = `SQL学习平台 - 用户账号列表\n`;
+    let fileContent = `《数据库原理与应用》智能学习平台 - 用户账号列表\n`;
     fileContent += `生成时间: ${new Date().toLocaleString('zh-CN')}\n`;
     fileContent += `统一密码: ${PASSWORD}\n`;
     fileContent += `${'='.repeat(60)}\n\n`;

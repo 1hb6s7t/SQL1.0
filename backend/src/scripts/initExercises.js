@@ -1,28 +1,19 @@
 /**
- * 初始化例题数据库 - 智慧农业传感器监测系统
- * 运行: node backend/src/scripts/initExercises.js
+ * 初始化例题数据库 - 双项目并列版
  */
-
 require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const { query, pool } = require('../config/database');
 
 async function initExercises() {
   try {
-    console.log('🚀 开始初始化智慧农业传感器监测系统例题数据库...\n');
+    console.log('🚀 开始初始化双项目例题数据库...');
 
-    // 1. 删除已存在的表（如果有）
-    console.log('🗑️  清理旧数据表...');
     await query('DROP TABLE IF EXISTS exercise_submissions CASCADE');
     await query('DROP TABLE IF EXISTS exercises CASCADE');
+    await query('DROP TABLE IF EXISTS equip_run_log CASCADE');
+    await query('DROP TABLE IF EXISTS equipment CASCADE');
     await query('DROP TABLE IF EXISTS sensor_monitor CASCADE');
-    // 同时清理旧的学生-课程表（如果存在）
-    await query('DROP TABLE IF EXISTS practice_sc CASCADE');
-    await query('DROP TABLE IF EXISTS practice_course CASCADE');
-    await query('DROP TABLE IF EXISTS practice_student CASCADE');
-    console.log('  ✓ 旧表清理完成');
 
-    // 2. 创建传感器监测表
-    console.log('\n📦 创建传感器监测数据表...');
     await query(`
       CREATE TABLE sensor_monitor (
         monitor_id SERIAL PRIMARY KEY,
@@ -34,10 +25,58 @@ async function initExercises() {
         status VARCHAR(10) NULL
       )
     `);
-    console.log('  ✓ sensor_monitor 表创建成功');
 
-    // 3. 插入传感器监测数据
-    console.log('\n📝 插入传感器监测数据...');
+    await query(`
+      CREATE TABLE equipment (
+        equip_id VARCHAR(20) PRIMARY KEY,
+        equip_name VARCHAR(30) NOT NULL,
+        workshop VARCHAR(20) NOT NULL,
+        status VARCHAR(10) NOT NULL,
+        purchase_year INT NOT NULL
+      )
+    `);
+
+    await query(`
+      CREATE TABLE equip_run_log (
+        log_id SERIAL PRIMARY KEY,
+        equip_id VARCHAR(20) NOT NULL REFERENCES equipment(equip_id),
+        run_hours DECIMAL(5,2) NOT NULL CHECK (run_hours >= 0),
+        production_num INT NOT NULL CHECK (production_num >= 0),
+        run_date VARCHAR(10) NOT NULL
+      )
+    `);
+
+    await query(`
+      CREATE TABLE exercises (
+        id SERIAL PRIMARY KEY,
+        project_code VARCHAR(30) NOT NULL DEFAULT 'exercise1',
+        title VARCHAR(200) NOT NULL,
+        description TEXT NOT NULL,
+        difficulty VARCHAR(20) DEFAULT 'beginner',
+        category VARCHAR(50),
+        hint TEXT,
+        correct_sql TEXT NOT NULL,
+        expected_result_description TEXT,
+        knowledge_point TEXT,
+        order_index INT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await query(`
+      CREATE TABLE exercise_submissions (
+        id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(id),
+        exercise_id INT REFERENCES exercises(id),
+        user_sql TEXT NOT NULL,
+        is_correct BOOLEAN DEFAULT FALSE,
+        ai_feedback TEXT,
+        attempt_count INT DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     const sensorData = [
       ['S202501', '温度', 25.30, '2025-11-01 08:00:00', '东区农田', '正常'],
       ['S202502', '湿度', 65.20, '2025-11-01 08:00:00', '东区农田', '正常'],
@@ -52,187 +91,63 @@ async function initExercises() {
       ['S202507', '温度', 24.70, '2025-11-02 10:00:00', '北区菜地', '正常'],
       ['S202508', '湿度', 72.30, '2025-11-02 11:00:00', '北区菜地', null]
     ];
-
     for (const data of sensorData) {
-      await query(
-        `INSERT INTO sensor_monitor (sensor_id, monitor_type, monitor_value, monitor_time, location, status) 
-         VALUES ($1, $2, $3, $4, $5, $6)`,
-        data
-      );
+      await query('INSERT INTO sensor_monitor (sensor_id, monitor_type, monitor_value, monitor_time, location, status) VALUES ($1,$2,$3,$4,$5,$6)', data);
     }
-    console.log(`  ✓ 插入 ${sensorData.length} 条传感器监测记录`);
 
-    // 4. 创建例题表
-    console.log('\n📋 创建例题表...');
-    await query(`
-      CREATE TABLE exercises (
-        id SERIAL PRIMARY KEY,
-        title VARCHAR(200) NOT NULL,
-        description TEXT NOT NULL,
-        difficulty VARCHAR(20) DEFAULT 'beginner',
-        category VARCHAR(50),
-        hint TEXT,
-        correct_sql TEXT NOT NULL,
-        expected_result_description TEXT,
-        knowledge_point TEXT,
-        order_index INT DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('  ✓ exercises 表创建成功');
+    const equipmentData = [
+      ['DEV202501', '数控机床', 'W01', '正常', 2023],
+      ['DEV202502', '机械臂', 'W01', '正常', 2023],
+      ['DEV202503', '传送带', 'W02', '维修', 2023],
+      ['DEV202504', '激光切割机', 'W02', '正常', 2024],
+      ['DEV202505', '分拣机', 'W01', '闲置', 2024],
+      ['DEV202506', '数控铣床', 'W02', '正常', 2024]
+    ];
+    for (const data of equipmentData) {
+      await query('INSERT INTO equipment (equip_id, equip_name, workshop, status, purchase_year) VALUES ($1,$2,$3,$4,$5)', data);
+    }
 
-    // 5. 创建学生答题记录表
-    await query(`
-      CREATE TABLE exercise_submissions (
-        id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(id),
-        exercise_id INT REFERENCES exercises(id),
-        user_sql TEXT NOT NULL,
-        is_correct BOOLEAN DEFAULT FALSE,
-        ai_feedback TEXT,
-        attempt_count INT DEFAULT 1,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('  ✓ exercise_submissions 表创建成功');
+    const logData = [
+      ['DEV202501', 8.50, 320, '2025-11-01'],
+      ['DEV202502', 10.00, 450, '2025-11-01'],
+      ['DEV202501', 7.80, 290, '2025-11-02'],
+      ['DEV202502', 8.00, 380, '2025-11-02'],
+      ['DEV202501', 8.30, 310, '2025-11-03'],
+      ['DEV202502', 9.50, 420, '2025-11-03'],
+      ['DEV202505', 0.00, 0, '2025-11-03'],
+      ['DEV202501', 7.90, 280, '2025-11-04'],
+      ['DEV202504', 9.20, 280, '2025-11-01'],
+      ['DEV202506', 8.40, 270, '2025-11-01'],
+      ['DEV202504', 8.50, 300, '2025-11-02'],
+      ['DEV202506', 7.90, 250, '2025-11-02'],
+      ['DEV202504', 8.80, 310, '2025-11-03'],
+      ['DEV202506', 8.70, 280, '2025-11-03'],
+      ['DEV202503', 0.00, 0, '2025-11-03']
+    ];
+    for (const data of logData) {
+      await query('INSERT INTO equip_run_log (equip_id, run_hours, production_num, run_date) VALUES ($1,$2,$3,$4)', data);
+    }
 
-    // 6. 插入智慧农业例题数据
-    console.log('\n📝 插入智慧农业例题数据...');
     const exercises = [
-      {
-        title: '基础列选择查询',
-        description: '【场景】农业运维基础数据统计\n\n查询所有监测记录的传感器编号、监测类型和数值。',
-        difficulty: 'beginner',
-        category: '选择列',
-        hint: '使用 SELECT 列1, 列2, 列3 FROM 表名 的格式，选择指定的列',
-        correct_sql: "SELECT sensor_id, monitor_type, monitor_value FROM sensor_monitor",
-        expected_result_description: '应返回所有监测记录的传感器编号(sensor_id)、监测类型(monitor_type)和监测数值(monitor_value)',
-        knowledge_point: '选择表中的若干列——指定目标列表达式，不查询冗余字段',
-        order_index: 1
-      },
-      {
-        title: '去重查询（DISTINCT）',
-        description: '【场景】设备清单统计\n\n查询已部署的所有传感器编号（避免重复统计）。',
-        difficulty: 'beginner',
-        category: '去重查询',
-        hint: '使用 DISTINCT 关键字消除重复行',
-        correct_sql: "SELECT DISTINCT sensor_id FROM sensor_monitor",
-        expected_result_description: '应返回所有不重复的传感器编号',
-        knowledge_point: 'DISTINCT短语消除重复行，对应实际运维中设备清单统计需求',
-        order_index: 2
-      },
-      {
-        title: '比较条件查询',
-        description: '【场景】农业高温预警筛选\n\n查询温度高于30℃的异常监测记录。',
-        difficulty: 'beginner',
-        category: '条件查询',
-        hint: '使用 WHERE 子句配合比较运算符(>)和 AND 连接多个条件',
-        correct_sql: "SELECT * FROM sensor_monitor WHERE monitor_type = '温度' AND monitor_value > 30",
-        expected_result_description: '应返回所有温度监测类型且数值超过30的记录',
-        knowledge_point: '比较运算符（>）+ 多重条件（AND），适配工程异常筛选场景',
-        order_index: 3
-      },
-      {
-        title: '范围查询（BETWEEN）',
-        description: '【场景】适宜作物生长湿度筛选\n\n查询土壤含水量在20%~25%之间的正常记录，显示传感器编号、监测数值和位置。',
-        difficulty: 'intermediate',
-        category: '范围查询',
-        hint: '使用 BETWEEN...AND... 谓词进行范围筛选',
-        correct_sql: "SELECT sensor_id, monitor_value, location FROM sensor_monitor WHERE monitor_type = '土壤含水量' AND monitor_value BETWEEN 20 AND 25 AND status = '正常'",
-        expected_result_description: '应返回土壤含水量在20-25之间且状态正常的记录的传感器编号、数值和位置',
-        knowledge_point: 'BETWEEN...AND...谓词，精准筛选数值范围',
-        order_index: 4
-      },
-      {
-        title: '模糊查询（LIKE）',
-        description: '【场景】特定编号和区域的传感器筛选\n\n查询编号以"S20250"开头且安装在"农田"区域的传感器记录。',
-        difficulty: 'intermediate',
-        category: '模糊查询',
-        hint: '使用 LIKE 操作符，% 代表任意长度字符串',
-        correct_sql: "SELECT * FROM sensor_monitor WHERE sensor_id LIKE 'S20250%' AND location LIKE '%农田%'",
-        expected_result_description: '应返回传感器编号以S20250开头且位置包含"农田"的所有记录',
-        knowledge_point: 'LIKE通配符（%），实现模糊匹配查询',
-        order_index: 5
-      },
-      {
-        title: '空值查询（IS NULL）',
-        description: '【场景】运维故障排查\n\n查询设备状态为空（离线）的传感器监测记录，显示传感器编号、监测时间和位置。',
-        difficulty: 'intermediate',
-        category: '空值查询',
-        hint: '使用 IS NULL 谓词判断空值，注意不能用 = NULL',
-        correct_sql: "SELECT sensor_id, monitor_time, location FROM sensor_monitor WHERE status IS NULL",
-        expected_result_description: '应返回状态为空的传感器记录的编号、时间和位置',
-        knowledge_point: 'IS NULL谓词，处理缺失值场景',
-        order_index: 6
-      },
-      {
-        title: '排序查询（ORDER BY）',
-        description: '【场景】最新数据优先展示\n\n查询西区大棚的所有监测记录，按监测时间降序排列。',
-        difficulty: 'intermediate',
-        category: '排序查询',
-        hint: '使用 ORDER BY 子句，DESC 表示降序排列',
-        correct_sql: "SELECT * FROM sensor_monitor WHERE location = '西区大棚' ORDER BY monitor_time DESC",
-        expected_result_description: '应返回西区大棚的所有监测记录，按时间从新到旧排列',
-        knowledge_point: 'ORDER BY子句，DESC降序排列，适配工程数据时效性需求',
-        order_index: 7
-      },
-      {
-        title: '集函数查询（AVG/MAX/COUNT）',
-        description: '【场景】环境趋势分析\n\n统计东区农田温度监测的平均值、最高值和记录总数。',
-        difficulty: 'intermediate',
-        category: '聚合函数',
-        hint: '使用 AVG() 计算平均值，MAX() 获取最大值，COUNT(*) 统计记录数',
-        correct_sql: "SELECT AVG(monitor_value) AS avg_temperature, MAX(monitor_value) AS max_temperature, COUNT(*) AS total_records FROM sensor_monitor WHERE location = '东区农田' AND monitor_type = '温度'",
-        expected_result_description: '应返回东区农田温度监测的平均温度、最高温度和总记录数',
-        knowledge_point: 'AVG/MAX/COUNT集函数，实现数据统计分析',
-        order_index: 8
-      },
-      {
-        title: '多重条件组合查询',
-        description: '【场景】复杂条件精准筛选\n\n查询2025年11月2日期间，南区果园或北区菜地的正常状态监测记录。',
-        difficulty: 'advanced',
-        category: '组合查询',
-        hint: '使用 AND/OR 组合多个条件，注意使用括号明确优先级',
-        correct_sql: "SELECT * FROM sensor_monitor WHERE monitor_time BETWEEN '2025-11-02 00:00:00' AND '2025-11-02 23:59:59' AND (location = '南区果园' OR location = '北区菜地') AND status = '正常'",
-        expected_result_description: '应返回11月2日当天南区果园或北区菜地状态正常的所有监测记录',
-        knowledge_point: 'AND/OR组合条件，复杂场景精准筛选',
-        order_index: 9
-      }
+      ['exercise1','基础列选择查询','【场景】农业运维基础数据统计\n\n查询所有监测记录的传感器编号、监测类型和数值。','beginner','选择列','使用 SELECT 列1, 列2, 列3 FROM 表名 的格式，选择指定的列',"SELECT sensor_id, monitor_type, monitor_value FROM sensor_monitor",'返回传感器编号、类型、数值','选择表中的若干列',1],
+      ['exercise1','去重查询（DISTINCT）','【场景】设备清单统计\n\n查询已部署的所有传感器编号（避免重复统计）。','beginner','去重查询','使用 DISTINCT 关键字消除重复行',"SELECT DISTINCT sensor_id FROM sensor_monitor",'返回不重复传感器编号','DISTINCT去重',2],
+      ['exercise1','比较条件查询','【场景】农业高温预警筛选\n\n查询温度高于30℃的异常监测记录。','beginner','条件查询','使用 WHERE 子句配合比较运算符(>) 和 AND',"SELECT * FROM sensor_monitor WHERE monitor_type = '温度' AND monitor_value > 30",'返回高温记录','WHERE 条件查询',3],
+      ['exercise1','范围查询（BETWEEN）','【场景】适宜作物生长湿度筛选\n\n查询土壤含水量在20%~25%之间的正常记录。','intermediate','范围查询','使用 BETWEEN...AND...',"SELECT sensor_id, monitor_value, location FROM sensor_monitor WHERE monitor_type = '土壤含水量' AND monitor_value BETWEEN 20 AND 25 AND status = '正常'",'返回土壤含水量适中记录','BETWEEN范围查询',4],
+      ['exercise1','模糊查询（LIKE）','【场景】特定编号和区域的传感器筛选\n\n查询编号以S20250开头且安装在农田区域的传感器记录。','intermediate','模糊查询','使用 LIKE 与 %',"SELECT * FROM sensor_monitor WHERE sensor_id LIKE 'S20250%' AND location LIKE '%农田%'",'返回匹配记录','LIKE模糊查询',5],
+      ['exercise1','空值查询（IS NULL）','【场景】运维故障排查\n\n查询设备状态为空的传感器监测记录。','intermediate','空值查询','使用 IS NULL 谓词',"SELECT sensor_id, monitor_time, location FROM sensor_monitor WHERE status IS NULL",'返回状态为空记录','IS NULL 空值查询',6],
+      ['exercise2','创建W01车间正常设备视图','【场景】运维员需要快速查看W01车间处于正常状态的设备。\n\n请创建视图 W01_Normal_Equip_View，仅展示 equip_id、equip_name、purchase_year 三列。','beginner','行列子集视图','用 WHERE workshop + status 过滤',"SELECT equip_id, equip_name, purchase_year FROM equipment WHERE workshop = 'W01' AND status = '正常'",'返回W01正常设备','行列子集视图',1],
+      ['exercise2','查询W01正常设备清单','【场景】基于已创建的视图查询全部数据。','beginner','视图查询','直接 SELECT * 查询视图对应结果',"SELECT * FROM (SELECT equip_id, equip_name, purchase_year FROM equipment WHERE workshop = 'W01' AND status = '正常') t",'返回W01正常设备清单','视图查询',2],
+      ['exercise2','筛选正常状态设备','【场景】管理员需要维护正常状态设备视图的数据范围。','beginner','带CHECK OPTION视图','先写出视图对应的 SELECT 结果',"SELECT equip_id, equip_name, status FROM equipment WHERE status = '正常'",'返回所有正常设备','CHECK OPTION视图基础',3],
+      ['exercise2','计算设备使用年限','【场景】需要统计设备已使用年限。','intermediate','带表达式的视图','使用 2025 - purchase_year AS use_years',"SELECT equip_id, equip_name, purchase_year, 2025 - purchase_year AS use_years FROM equipment",'返回设备使用年限','表达式视图',4],
+      ['exercise2','统计设备总运行时长','【场景】统计员需要分析每台设备累计运行时长。','intermediate','分组视图','使用 SUM(run_hours) 和 GROUP BY equip_id',"SELECT equip_id, SUM(run_hours) AS total_run_hours FROM equip_run_log GROUP BY equip_id",'返回每台设备的累计运行时长','分组视图',5],
+      ['exercise2','筛选高运行时长设备','【场景】在累计运行时长统计基础上筛选运行时长不少于30小时的设备。','intermediate','基于视图的视图','把分组结果作为子查询再次过滤',"SELECT equip_id, total_run_hours FROM (SELECT equip_id, SUM(run_hours) AS total_run_hours FROM equip_run_log GROUP BY equip_id) t WHERE total_run_hours >= 30",'返回高运行时长设备','基于视图的视图',6]
     ];
 
     for (const ex of exercises) {
-      await query(`
-        INSERT INTO exercises (title, description, difficulty, category, hint, correct_sql, expected_result_description, knowledge_point, order_index)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      `, [ex.title, ex.description, ex.difficulty, ex.category, ex.hint, ex.correct_sql, ex.expected_result_description, ex.knowledge_point, ex.order_index]);
+      await query('INSERT INTO exercises (project_code, title, description, difficulty, category, hint, correct_sql, expected_result_description, knowledge_point, order_index) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)', ex);
     }
-    console.log(`  ✓ 插入 ${exercises.length} 道智慧农业例题`);
 
-    // 7. 创建索引优化查询性能
-    console.log('\n🔧 创建索引...');
-    await query('CREATE INDEX IF NOT EXISTS idx_sensor_monitor_type ON sensor_monitor(monitor_type)');
-    await query('CREATE INDEX IF NOT EXISTS idx_sensor_monitor_location ON sensor_monitor(location)');
-    await query('CREATE INDEX IF NOT EXISTS idx_sensor_monitor_time ON sensor_monitor(monitor_time)');
-    console.log('  ✓ 索引创建完成');
-
-    console.log('\n' + '═'.repeat(60));
-    console.log('✅ 智慧农业传感器监测系统例题数据库初始化完成！');
-    console.log('═'.repeat(60));
-    console.log('\n📊 数据库概览:');
-    console.log('  📋 sensor_monitor: 12 条传感器监测记录');
-    console.log('  📝 exercises: 9 道SQL单表查询例题');
-    console.log('\n📚 例题知识点覆盖:');
-    console.log('  1. 选择表中的若干列（指定列查询）');
-    console.log('  2. DISTINCT去重查询');
-    console.log('  3. WHERE条件查询（比较运算符）');
-    console.log('  4. BETWEEN范围查询');
-    console.log('  5. LIKE模糊查询');
-    console.log('  6. IS NULL空值查询');
-    console.log('  7. ORDER BY排序查询');
-    console.log('  8. 聚合函数（AVG/MAX/COUNT）');
-    console.log('  9. AND/OR多重条件组合查询');
-
+    console.log('✅ 双项目例题初始化完成！');
   } catch (error) {
     console.error('❌ 初始化失败:', error.message);
     console.error(error);

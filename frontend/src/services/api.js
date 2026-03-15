@@ -105,14 +105,14 @@ export const aiAPI = {
 
 // 例题练习 API
 export const exerciseAPI = {
-  getAll: () => api.get('/exercises'),
+  getAll: (projectCode) => api.get('/exercises', { params: { projectCode } }),
   getById: (id) => api.get(`/exercises/${id}`),
   getCategories: () => api.get('/exercises/categories'),
-  getSchema: () => api.get('/exercises/schema'),
+  getSchema: (projectCode) => api.get('/exercises/schema', { params: { projectCode } }),
   executeSQL: (sql) => api.post('/exercises/execute', { sql }),
   submitAnswer: (id, sql) => api.post(`/exercises/${id}/submit`, { sql }),
   getHint: (id, userSQL) => api.post(`/exercises/${id}/hint`, { userSQL }),
-  getUserProgress: () => api.get('/exercises/user/progress')
+  getUserProgress: (projectCode) => api.get('/exercises/user/progress', { params: { projectCode } })
 }
 
 export default api

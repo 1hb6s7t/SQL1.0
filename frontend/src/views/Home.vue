@@ -3,14 +3,8 @@
     <!-- Hero区域 -->
     <section class="hero">
       <div class="hero-content">
-        <h1 class="hero-title">
-          <span class="gradient-text">哈尔滨剑桥学院</span>
-          <br>SQL学习平台
-        </h1>
-        <p class="hero-subtitle">
-          厚德 笃学 求实 创新
-          <br>在这里开启你的数据库探索之旅
-        </p>
+        <h1 class="hero-title">《数据库原理与应用》<br><span class="gradient-text">智能学习平台</span></h1>
+        <p class="hero-subtitle">聚焦数据库原理、SQL实训、案例化练习与智能辅导，帮助学习者从基础语法快速过渡到项目实战。</p>
         <div class="hero-actions">
           <router-link to="/playground" class="btn btn-primary btn-lg">
             <span>🚀</span> 开始学习
@@ -48,22 +42,22 @@
         <div class="feature-card">
           <div class="feature-icon">🎯</div>
           <h3>系统化知识库</h3>
-          <p>从基础到高级，覆盖SELECT、JOIN、子查询等核心知识点，循序渐进学习</p>
+          <p>覆盖数据库原理、SQL语法、查询优化与实战案例，按难度分层学习。</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🤖</div>
           <h3>AI智能助手</h3>
-          <p>基于Qwen大模型，实时分析代码、纠错指导、智能答疑，24小时在线辅导</p>
+          <p>支持 SQL 纠错、结果分析、解题提示与思路讲解，辅助课堂教学与自主训练。</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">💬</div>
-          <h3>社区互动</h3>
-          <p>与其他学习者交流讨论，分享代码，互相点评，共同进步</p>
+          <h3>案例驱动练习</h3>
+          <p>围绕真实业务场景设计题目，从单表查询到视图应用，强化解决问题能力。</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">📊</div>
           <h3>学习追踪</h3>
-          <p>记录学习进度，分析常见错误，生成个性化学习报告</p>
+          <p>记录答题进度、错误类型与掌握情况，便于教师组织教学、学生查漏补缺。</p>
         </div>
       </div>
     </section>
@@ -121,8 +115,8 @@
 
     <!-- CTA -->
     <section class="cta">
-      <h2>准备好开始学习SQL了吗？</h2>
-      <p>立即注册，开启你的数据库学习之旅</p>
+      <h2>准备好开始数据库实战训练了吗？</h2>
+      <p>立即进入平台，体验知识学习、案例练习与智能辅导。</p>
       <router-link v-if="!authStore.isLoggedIn" to="/register" class="btn btn-primary btn-lg">
         立即注册
       </router-link>

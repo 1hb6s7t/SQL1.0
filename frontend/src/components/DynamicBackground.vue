@@ -155,24 +155,20 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-color: #001f3f; /* 兜底色 - 深蓝 */
+  background-color: #0b1120;
   overflow: hidden;
 }
 
 /* 背景图层 */
 .bg-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/lb.png');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  /* 轻微放大以支持视差效果 */
-  transform: scale(1.05);
-  filter: brightness(0.9) contrast(1.1) saturate(1.1); /* 调整亮度对比度 */
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(59,130,246,0.22), transparent 32%),
+    radial-gradient(circle at 80% 18%, rgba(6,182,212,0.18), transparent 28%),
+    radial-gradient(circle at 50% 80%, rgba(14,165,233,0.15), transparent 36%),
+    linear-gradient(135deg, #0f172a 0%, #111827 45%, #0b1120 100%);
+  transform: scale(1.02);
 }
 
 canvas {
@@ -194,9 +190,9 @@ canvas {
   z-index: 2;
   background: linear-gradient(
     to bottom,
-    rgba(0, 31, 63, 0.5) 0%,
-    rgba(0, 51, 102, 0.2) 40%,
-    rgba(0, 191, 255, 0.1) 100%
+    rgba(15, 23, 42, 0.35) 0%,
+    rgba(15, 23, 42, 0.12) 45%,
+    rgba(14, 165, 233, 0.08) 100%
   );
   pointer-events: none;
 }
