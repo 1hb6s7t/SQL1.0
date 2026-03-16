@@ -217,7 +217,7 @@ class Exercise {
           { sensor_id: 'S202504', monitor_type: '温度', monitor_value: 32.1, location: '南区果园', status: '异常' },
           { sensor_id: 'S202505', monitor_type: '土壤含水量', monitor_value: 18.3, location: '西区大棚', status: null }
         ],
-        knowledgePoints: ['选择列', 'DISTINCT', 'WHERE 条件过滤', 'BETWEEN 范围查询', 'LIKE 模糊查询', 'IS NULL 空值判断', 'ORDER BY 排序', '聚合函数'],
+        knowledgePoints: ['选择列', 'DISTINCT', 'WHERE 条件过滤', 'BETWEEN 范围查询', 'LIKE 模糊查询', 'IS NULL 空值判断', 'ORDER BY 排序', '聚合函数（AVG/MAX/COUNT）', '多重条件组合查询'],
         note: '项目一保留原单表查询训练内容。'
       },
       exercise2: {
