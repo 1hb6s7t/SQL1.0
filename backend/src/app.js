@@ -20,6 +20,9 @@ const exerciseRoutes = require('./routes/exerciseRoutes');
 // 创建Express应用
 const app = express();
 
+// 信任反向代理（Render / Netlify / Nginx 等），解决 express-rate-limit X-Forwarded-For 报错
+app.set('trust proxy', 1);
+
 // 安全中间件
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
