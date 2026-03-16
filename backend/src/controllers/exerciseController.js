@@ -1,13 +1,13 @@
 /**
- * 例题控制器
- * 处理例题练习相关的请求
+ * 项目控制器
+ * 处理项目练习相关的请求
  */
 
 const Exercise = require('../models/Exercise');
 const aiService = require('../services/aiService');
 
 /**
- * 获取所有例题列表
+ * 获取所有项目题目列表
  */
 exports.getAllExercises = async (req, res) => {
   try {
@@ -17,16 +17,16 @@ exports.getAllExercises = async (req, res) => {
       data: { exercises }
     });
   } catch (error) {
-    console.error('获取例题列表失败:', error);
+    console.error('获取项目题目列表失败:', error);
     res.status(500).json({
       success: false,
-      message: '获取例题列表失败'
+      message: '获取项目题目列表失败'
     });
   }
 };
 
 /**
- * 获取例题详情
+ * 获取项目题目详情
  */
 exports.getExerciseById = async (req, res) => {
   try {
@@ -36,7 +36,7 @@ exports.getExerciseById = async (req, res) => {
     if (!exercise) {
       return res.status(404).json({
         success: false,
-        message: '例题不存在'
+        message: '项目不存在'
       });
     }
 
@@ -58,10 +58,10 @@ exports.getExerciseById = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('获取例题详情失败:', error);
+    console.error('获取项目题目详情失败:', error);
     res.status(500).json({
       success: false,
-      message: '获取例题详情失败'
+      message: '获取项目题目详情失败'
     });
   }
 };
@@ -131,12 +131,12 @@ exports.submitAnswer = async (req, res) => {
       });
     }
 
-    // 获取例题信息
+    // 获取项目信息
     const exercise = await Exercise.getById(id);
     if (!exercise) {
       return res.status(404).json({
         success: false,
-        message: '例题不存在'
+        message: '项目不存在'
       });
     }
 
@@ -235,7 +235,7 @@ exports.getHint = async (req, res) => {
     if (!exercise) {
       return res.status(404).json({
         success: false,
-        message: '例题不存在'
+        message: '项目不存在'
       });
     }
 

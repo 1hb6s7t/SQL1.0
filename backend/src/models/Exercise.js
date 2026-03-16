@@ -1,5 +1,5 @@
 /**
- * 例题模型
+ * 项目模型
  */
 const { query } = require('../config/database');
 
@@ -35,17 +35,54 @@ class Exercise {
 
   static async executeUserSQL(userSQL) {
     try {
-      const trimmedSQL = userSQL.trim().toUpperCase();
-      if (!trimmedSQL.startsWith('SELECT')) {
-        return { success: false, error: '只允许执行 SELECT 查询语句', rows: [] };
+      const sql = userSQL.trim();
+      const normalizedSQL = sql.replace(/\s+/g, ' ').trim();
+      const upperSQL = normalizedSQL.toUpperCase();
+
+      if (!sql) {
+        return { success: false, error: '请输入 SQL 语句', rows: [] };
       }
-      const dangerousKeywords = ['DROP', 'DELETE', 'UPDATE', 'INSERT', 'ALTER', 'TRUNCATE', 'CREATE'];
+
+      const strippedSQL = normalizedSQL.replace(/;\s*$/, '');
+      if (strippedSQL.includes(';')) {
+        return { success: false, error: '仅支持执行单条 SQL 语句', rows: [] };
+      }
+
+      const isSelectQuery = /^SELECT\b/i.test(normalizedSQL);
+      const isCreateViewQuery = /^CREATE\s+(OR\s+REPLACE\s+)?VIEW\b/i.test(normalizedSQL);
+
+      if (!isSelectQuery && !isCreateViewQuery) {
+        return { success: false, error: '当前编辑区仅允许执行 SELECT 查询或 CREATE VIEW 语句', rows: [] };
+      }
+
+      const dangerousKeywords = ['DROP', 'DELETE', 'UPDATE', 'INSERT', 'ALTER', 'TRUNCATE', 'GRANT', 'REVOKE'];
       for (const keyword of dangerousKeywords) {
-        if (trimmedSQL.includes(keyword)) {
+        if (upperSQL.includes(keyword)) {
           return { success: false, error: `不允许使用 ${keyword} 操作`, rows: [] };
         }
       }
-      const result = await query(userSQL);
+
+      if (isCreateViewQuery) {
+        const hasAsSelect = /^CREATE\s+(OR\s+REPLACE\s+)?VIEW\s+[A-Z0-9_".]+\s*(\([^)]*\))?\s+AS\s+SELECT\b/i.test(normalizedSQL);
+        if (!hasAsSelect) {
+          return { success: false, error: 'CREATE VIEW 语句格式不正确，需使用 CREATE VIEW ... AS SELECT ...', rows: [] };
+        }
+
+        const executableSQL = /^CREATE\s+VIEW\b/i.test(sql)
+          ? sql.replace(/^CREATE\s+VIEW\b/i, 'CREATE OR REPLACE VIEW')
+          : sql;
+
+        await query(executableSQL);
+        return {
+          success: true,
+          rows: [],
+          rowCount: 0,
+          fields: [],
+          message: '视图创建成功，现在可以继续使用 SELECT 查询该视图'
+        };
+      }
+
+      const result = await query(sql);
       return {
         success: true,
         rows: result.rows,
@@ -57,9 +94,15 @@ class Exercise {
     }
   }
 
+  static extractCreatedViewName(userSQL) {
+    const normalizedSQL = userSQL.trim().replace(/\s+/g, ' ');
+    const match = normalizedSQL.match(/^CREATE\s+(?:OR\s+REPLACE\s+)?VIEW\s+([A-Za-z_][A-Za-z0-9_$]*|"[^"]+")/i);
+    return match ? match[1] : null;
+  }
+
   static async executeCorrectSQL(exerciseId) {
     const exercise = await this.getById(exerciseId);
-    if (!exercise) return { success: false, error: '例题不存在' };
+    if (!exercise) return { success: false, error: '项目不存在' };
     try {
       const result = await query(exercise.correct_sql);
       return { success: true, rows: result.rows, rowCount: result.rowCount };
@@ -84,14 +127,27 @@ class Exercise {
     if (!userResult.success) {
       return { isCorrect: false, userResult, message: `SQL执行错误: ${userResult.error}` };
     }
+
     const correctResult = await this.executeCorrectSQL(exerciseId);
     if (!correctResult.success) {
       return { isCorrect: false, message: '获取正确答案失败' };
     }
-    const isCorrect = this.compareResultSets(userResult.rows, correctResult.rows);
+
+    let comparableUserRows = userResult.rows;
+    const createdViewName = this.extractCreatedViewName(userSQL);
+    if (createdViewName) {
+      try {
+        const createdViewResult = await query(`SELECT * FROM ${createdViewName}`);
+        comparableUserRows = createdViewResult.rows;
+      } catch (error) {
+        return { isCorrect: false, userResult, message: `视图已创建，但读取视图失败: ${error.message}` };
+      }
+    }
+
+    const isCorrect = this.compareResultSets(comparableUserRows, correctResult.rows);
     return {
       isCorrect,
-      userResult,
+      userResult: { ...userResult, rows: comparableUserRows },
       correctResult,
       message: isCorrect ? '恭喜你，答案正确！' : '答案不正确，请再试试'
     };
@@ -141,7 +197,7 @@ class Exercise {
     return {
       exercise1: {
         projectCode: 'exercise1',
-        projectLabel: '例题一',
+        projectLabel: '项目一',
         projectName: '智慧农业传感器监测系统单表查询实战项目',
         projectDescription: '基于传感器监测单表，训练 SELECT、DISTINCT、WHERE、BETWEEN、LIKE、IS NULL、ORDER BY 与聚合函数等核心查询能力。',
         tables: [{
@@ -162,11 +218,11 @@ class Exercise {
           { sensor_id: 'S202505', monitor_type: '土壤含水量', monitor_value: 18.3, location: '西区大棚', status: null }
         ],
         knowledgePoints: ['选择列', 'DISTINCT', 'WHERE 条件过滤', 'BETWEEN 范围查询', 'LIKE 模糊查询', 'IS NULL 空值判断', 'ORDER BY 排序', '聚合函数'],
-        note: '例题一保留原单表查询训练内容。'
+        note: '项目一保留原单表查询训练内容。'
       },
       exercise2: {
         projectCode: 'exercise2',
-        projectLabel: '例题二',
+        projectLabel: '项目二',
         projectName: '智能制造设备管理系统视图应用实战项目',
         projectDescription: '基于设备基础表与运行日志表，训练视图定义、视图查询、表达式计算、分组统计与基于视图再次筛选。',
         tables: [
@@ -197,7 +253,7 @@ class Exercise {
           { equip_id: 'DEV202505', equip_name: '分拣机', workshop: 'W01', status: '闲置', purchase_year: 2024 }
         ],
         knowledgePoints: ['行列子集视图', 'CHECK OPTION', '表达式视图', '分组视图', '基于视图的视图', '视图查询与删除'],
-        note: '例题二新增为并列项目，不覆盖原例题一。'
+        note: '项目二新增为并列项目，不覆盖原项目一。'
       }
     };
   }

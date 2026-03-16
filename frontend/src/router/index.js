@@ -63,7 +63,7 @@ const routes = [
     path: '/exercises',
     name: 'Exercises',
     component: Exercises,
-    meta: { title: '例题练习' }
+    meta: { title: '项目练习' }
   },
   {
     path: '/community',

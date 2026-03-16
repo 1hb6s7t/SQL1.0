@@ -1,12 +1,12 @@
 /**
- * 初始化例题数据库 - 双项目并列版
+ * 初始化项目数据库 - 双项目并列版
  */
 require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const { query, pool } = require('../config/database');
 
 async function initExercises() {
   try {
-    console.log('🚀 开始初始化双项目例题数据库...');
+    console.log('🚀 开始初始化双项目数据库...');
 
     await query('DROP TABLE IF EXISTS exercise_submissions CASCADE');
     await query('DROP TABLE IF EXISTS exercises CASCADE');
@@ -135,19 +135,21 @@ async function initExercises() {
       ['exercise1','范围查询（BETWEEN）','【场景】适宜作物生长湿度筛选\n\n查询土壤含水量在20%~25%之间的正常记录。','intermediate','范围查询','使用 BETWEEN...AND...',"SELECT sensor_id, monitor_value, location FROM sensor_monitor WHERE monitor_type = '土壤含水量' AND monitor_value BETWEEN 20 AND 25 AND status = '正常'",'返回土壤含水量适中记录','BETWEEN范围查询',4],
       ['exercise1','模糊查询（LIKE）','【场景】特定编号和区域的传感器筛选\n\n查询编号以S20250开头且安装在农田区域的传感器记录。','intermediate','模糊查询','使用 LIKE 与 %',"SELECT * FROM sensor_monitor WHERE sensor_id LIKE 'S20250%' AND location LIKE '%农田%'",'返回匹配记录','LIKE模糊查询',5],
       ['exercise1','空值查询（IS NULL）','【场景】运维故障排查\n\n查询设备状态为空的传感器监测记录。','intermediate','空值查询','使用 IS NULL 谓词',"SELECT sensor_id, monitor_time, location FROM sensor_monitor WHERE status IS NULL",'返回状态为空记录','IS NULL 空值查询',6],
-      ['exercise2','创建W01车间正常设备视图','【场景】运维员需要快速查看W01车间处于正常状态的设备。\n\n请创建视图 W01_Normal_Equip_View，仅展示 equip_id、equip_name、purchase_year 三列。','beginner','行列子集视图','用 WHERE workshop + status 过滤',"SELECT equip_id, equip_name, purchase_year FROM equipment WHERE workshop = 'W01' AND status = '正常'",'返回W01正常设备','行列子集视图',1],
-      ['exercise2','查询W01正常设备清单','【场景】基于已创建的视图查询全部数据。','beginner','视图查询','直接 SELECT * 查询视图对应结果',"SELECT * FROM (SELECT equip_id, equip_name, purchase_year FROM equipment WHERE workshop = 'W01' AND status = '正常') t",'返回W01正常设备清单','视图查询',2],
-      ['exercise2','筛选正常状态设备','【场景】管理员需要维护正常状态设备视图的数据范围。','beginner','带CHECK OPTION视图','先写出视图对应的 SELECT 结果',"SELECT equip_id, equip_name, status FROM equipment WHERE status = '正常'",'返回所有正常设备','CHECK OPTION视图基础',3],
-      ['exercise2','计算设备使用年限','【场景】需要统计设备已使用年限。','intermediate','带表达式的视图','使用 2025 - purchase_year AS use_years',"SELECT equip_id, equip_name, purchase_year, 2025 - purchase_year AS use_years FROM equipment",'返回设备使用年限','表达式视图',4],
-      ['exercise2','统计设备总运行时长','【场景】统计员需要分析每台设备累计运行时长。','intermediate','分组视图','使用 SUM(run_hours) 和 GROUP BY equip_id',"SELECT equip_id, SUM(run_hours) AS total_run_hours FROM equip_run_log GROUP BY equip_id",'返回每台设备的累计运行时长','分组视图',5],
-      ['exercise2','筛选高运行时长设备','【场景】在累计运行时长统计基础上筛选运行时长不少于30小时的设备。','intermediate','基于视图的视图','把分组结果作为子查询再次过滤',"SELECT equip_id, total_run_hours FROM (SELECT equip_id, SUM(run_hours) AS total_run_hours FROM equip_run_log GROUP BY equip_id) t WHERE total_run_hours >= 30",'返回高运行时长设备','基于视图的视图',6]
+      ['exercise2','创建 W01 正常设备视图','【场景】运维员需要快速查看 W01 车间处于正常状态的设备清单。\n\n请创建视图 W01_Normal_Equip_View，仅展示 equip_id、equip_name、purchase_year 三列。建议使用 CREATE OR REPLACE VIEW，便于反复调试。','beginner','行列子集视图',"先写 CREATE OR REPLACE VIEW ... AS SELECT ...，再用 WHERE workshop = 'W01' AND status = '正常' 过滤。","SELECT equip_id, equip_name, purchase_year FROM equipment WHERE workshop = 'W01' AND status = '正常'",'返回 W01 正常设备','行列子集视图',1],
+      ['exercise2','查询 W01 正常设备视图','【场景】视图创建完成后，班组长需要直接查看该视图中的全部记录。\n\n请基于 W01_Normal_Equip_View 查询全部数据。','beginner','视图查询','直接对视图执行 SELECT * FROM W01_Normal_Equip_View。',"SELECT * FROM (SELECT equip_id, equip_name, purchase_year FROM equipment WHERE workshop = 'W01' AND status = '正常') t",'返回 W01 正常设备清单','视图查询',2],
+      ['exercise2','创建正常设备状态视图','【场景】管理员希望将所有正常状态设备单独抽成视图，便于后续权限控制与统一维护。\n\n请创建视图 Normal_Equipment_View，返回 equip_id、equip_name、status 三列。','beginner','带 CHECK OPTION 视图','先完成 CREATE OR REPLACE VIEW Normal_Equipment_View AS SELECT ...，本题先关注过滤结果本身。',"SELECT equip_id, equip_name, status FROM equipment WHERE status = '正常'",'返回所有正常设备','CHECK OPTION视图基础',3],
+      ['exercise2','创建设备使用年限视图','【场景】设备管理员要查看每台设备的采购年份与使用年限。\n\n请创建视图 Equip_Use_Years_View，增加 use_years 字段表示 2025 - purchase_year。','intermediate','带表达式的视图','在 SELECT 中写出 2025 - purchase_year AS use_years。',"SELECT equip_id, equip_name, purchase_year, 2025 - purchase_year AS use_years FROM equipment",'返回设备使用年限','表达式视图',4],
+      ['exercise2','创建设备累计运行时长视图','【场景】统计员需要沉淀每台设备的累计运行时长，为后续筛选高负载设备做准备。\n\n请创建视图 Equip_Total_Run_View，统计每台设备的 total_run_hours。','intermediate','分组视图','使用 SUM(run_hours) AS total_run_hours，并按 equip_id 分组。',"SELECT equip_id, SUM(run_hours) AS total_run_hours FROM equip_run_log GROUP BY equip_id",'返回每台设备的累计运行时长','分组视图',5],
+      ['exercise2','筛选高运行时长设备视图结果','【场景】在累计运行时长视图基础上，筛选运行时长不少于 30 小时的设备。\n\n请查询高运行时长设备编号及总运行时长。','intermediate','基于视图的视图','先得到每台设备累计运行时长，再筛选 total_run_hours >= 30。',"SELECT equip_id, total_run_hours FROM (SELECT equip_id, SUM(run_hours) AS total_run_hours FROM equip_run_log GROUP BY equip_id) t WHERE total_run_hours >= 30",'返回高运行时长设备','基于视图的视图',6],
+      ['exercise2','统计各车间正常设备数量','【场景】生产主管希望快速掌握各车间当前正常设备规模。\n\n请统计每个 workshop 的正常设备数量，结果列命名为 normal_equip_count。','intermediate','分组统计',"使用 COUNT(*)，并按 workshop 分组，只统计 status = '正常' 的记录。","SELECT workshop, COUNT(*) AS normal_equip_count FROM equipment WHERE status = '正常' GROUP BY workshop",'返回各车间正常设备数量','分组统计',7],
+      ['exercise2','查询高产设备运行概况','【场景】管理层要查看累计产量较高设备的运行概况，辅助排产优化。\n\n请统计每台设备累计 production_num，并筛选累计产量不少于 800 的设备。','advanced','聚合筛选','先按 equip_id 分组统计 SUM(production_num)，再用 HAVING 过滤 >= 800。',"SELECT equip_id, SUM(production_num) AS total_production_num FROM equip_run_log GROUP BY equip_id HAVING SUM(production_num) >= 800",'返回高产设备运行概况','HAVING 聚合筛选',8],
     ];
 
     for (const ex of exercises) {
       await query('INSERT INTO exercises (project_code, title, description, difficulty, category, hint, correct_sql, expected_result_description, knowledge_point, order_index) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)', ex);
     }
 
-    console.log('✅ 双项目例题初始化完成！');
+    console.log('✅ 双项目初始化完成！');
   } catch (error) {
     console.error('❌ 初始化失败:', error.message);
     console.error(error);

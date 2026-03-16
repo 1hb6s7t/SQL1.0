@@ -5,10 +5,10 @@
         <div class="hero-copy">
           <span class="hero-pill">课程实训 · 智能导学</span>
           <h1>数据库课程案例工作台</h1>
-          <p>围绕课程教学场景，把“例题一”和“例题二”拆分为真正独立的项目卡片。你可以查看项目结构、知识点、练习清单，并进入沉浸式答题区完成训练。</p>
+          <p>围绕课程教学场景，把两个训练单元整合为真正独立的项目卡片。你可以查看项目结构、知识点、练习清单，并进入沉浸式答题区完成训练。</p>
           <div class="hero-actions">
-            <button class="hero-action primary" @click="switchProject('exercise1')">进入例题一</button>
-            <button class="hero-action secondary" @click="switchProject('exercise2')">进入例题二</button>
+            <button class="hero-action primary" @click="switchProject('exercise1')">进入项目一</button>
+            <button class="hero-action secondary" @click="switchProject('exercise2')">进入项目二</button>
           </div>
         </div>
         <div class="hero-side">
@@ -149,7 +149,7 @@
             <div class="editor-top">
               <div>
                 <h4>SQL 编辑区</h4>
-                <p>支持 Ctrl + Enter 快速运行</p>
+                <p>支持 Ctrl + Enter 快速运行；项目二支持 CREATE VIEW ... AS SELECT ...</p>
               </div>
             </div>
             <textarea v-model="userSQL" placeholder="在此输入你的SQL查询语句..." @keydown.ctrl.enter="executeSQL"></textarea>
@@ -163,13 +163,13 @@
           <div v-if="queryResult" class="workspace-panel glass-panel">
             <h4>查询结果</h4>
             <div v-if="queryResult.success">
-              <p class="result-info">返回 {{ queryResult.rowCount }} 行数据</p>
+              <p class="result-info">{{ queryResult.message || `返回 ${queryResult.rowCount} 行数据` }}</p>
               <div class="result-table-wrapper">
                 <table v-if="queryResult.rows.length > 0" class="result-table">
                   <thead><tr><th v-for="field in queryResult.fields" :key="field">{{ field }}</th></tr></thead>
                   <tbody><tr v-for="(row, index) in queryResult.rows" :key="index"><td v-for="field in queryResult.fields" :key="field">{{ row[field] ?? 'NULL' }}</td></tr></tbody>
                 </table>
-                <p v-else class="no-data">查询结果为空</p>
+                <p v-else class="no-data">{{ queryResult.message || '查询结果为空' }}</p>
               </div>
             </div>
             <div v-else class="result-error">❌ {{ queryResult.error }}</div>
@@ -206,8 +206,8 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
 const projects = [
-  { code: 'exercise1', label: '例题一', name: '智慧农业传感器监测系统', summary: '保留原有单表查询训练，聚焦 SELECT、WHERE、DISTINCT、LIKE、BETWEEN 等基础核心技能。' },
-  { code: 'exercise2', label: '例题二', name: '智能制造设备管理系统视图应用实战项目', summary: '新增视图应用训练，强调项目化场景、表达式计算、分组统计与视图思维。' }
+  { code: 'exercise1', label: '项目一', name: '智慧农业传感器监测系统', summary: '保留原有单表查询训练，聚焦 SELECT、WHERE、DISTINCT、LIKE、BETWEEN 等基础核心技能。' },
+  { code: 'exercise2', label: '项目二', name: '智能制造设备管理系统视图应用实战项目', summary: '新增视图应用训练，强调项目化场景、表达式计算、分组统计与视图思维。' }
 ]
 const activeProject = ref('exercise1')
 const loading = ref(true)
@@ -260,7 +260,7 @@ const loadAll = async () => {
   try {
     await Promise.all([loadExercises(), loadSchema(), loadUserProgress()])
   } catch (error) {
-    console.error('加载例题失败:', error)
+    console.error('加载项目失败:', error)
   } finally {
     loading.value = false
   }

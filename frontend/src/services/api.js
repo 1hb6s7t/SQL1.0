@@ -103,7 +103,7 @@ export const aiAPI = {
   getWeeklySummary: () => api.get('/ai/weekly-summary')
 }
 
-// 例题练习 API
+// 项目练习 API
 export const exerciseAPI = {
   getAll: (projectCode) => api.get('/exercises', { params: { projectCode } }),
   getById: (id) => api.get(`/exercises/${id}`),
