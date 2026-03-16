@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const config = require('./config/env');
+const { ensureExerciseSeeds } = require('./scripts/ensureExerciseSeeds');
 
 // 导入路由
 const authRoutes = require('./routes/authRoutes');
@@ -193,7 +194,7 @@ app.use((err, req, res, next) => {
 
 // 启动服务器
 const PORT = config.port;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
@@ -207,6 +208,8 @@ app.listen(PORT, () => {
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
   `);
+
+  await ensureExerciseSeeds();
 });
 
 module.exports = app;
