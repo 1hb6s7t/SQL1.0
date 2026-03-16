@@ -206,7 +206,7 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
 const projects = [
-  { code: 'exercise1', label: '项目一', name: '智慧农业传感器监测系统', summary: '保留原有单表查询训练，聚焦 SELECT、WHERE、DISTINCT、LIKE、BETWEEN 等基础核心技能。' },
+  { code: 'exercise1', label: '项目一', name: '智慧农业传感器监测系统', summary: '单表查询综合训练，覆盖 SELECT、DISTINCT、WHERE、BETWEEN、LIKE、IS NULL、ORDER BY、聚合函数与多重条件组合查询。' },
   { code: 'exercise2', label: '项目二', name: '智能制造设备管理系统视图应用实战项目', summary: '新增视图应用训练，强调项目化场景、表达式计算、分组统计与视图思维。' }
 ]
 const activeProject = ref('exercise1')

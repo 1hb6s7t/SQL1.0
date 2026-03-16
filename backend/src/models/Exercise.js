@@ -199,7 +199,7 @@ class Exercise {
         projectCode: 'exercise1',
         projectLabel: '项目一',
         projectName: '智慧农业传感器监测系统单表查询实战项目',
-        projectDescription: '基于传感器监测单表，训练 SELECT、DISTINCT、WHERE、BETWEEN、LIKE、IS NULL、ORDER BY 与聚合函数等核心查询能力。',
+        projectDescription: '基于传感器监测单表，训练 SELECT、DISTINCT、WHERE、BETWEEN、LIKE、IS NULL、ORDER BY、聚合函数（AVG/MAX/COUNT）与多重条件组合查询等核心能力。',
         tables: [{
           name: 'sensor_monitor', actualName: 'sensor_monitor', description: '传感器监测记录表',
           columns: [
